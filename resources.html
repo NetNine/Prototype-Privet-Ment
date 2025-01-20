@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - GHOST OF THE MECHANISM®[ GOLDBATCH TRADERS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .resources-hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, rgba(0, 255, 136, 0.1), rgba(0, 102, 255, 0.1));
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .resources-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .resources-hero p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .resource-card {
+            background: var(--glass-color);
+            border: var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .resource-card.featured {
+            background: var(--featured-color);
+            border: var(--featured-border);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .resource-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .resource-content {
+            flex: 1;
+        }
+
+        .resource-content h3 {
+            color: var(--primary-color);
+            margin: 0 0 1rem 0;
+            font-size: 1.5rem;
+        }
+
+        .resource-content p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .resource-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: auto;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: rgba(0, 102, 255, 0.1);
+        }
+
+        .resource-link:hover {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .featured-badge {
+            background: var(--featured-badge-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .resources-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .resources-hero {
+                padding: 2rem 1rem;
+            }
+
+            .resources-hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-container">
+        <nav class="glass-nav">
+            <div class="logo">
+                <img src="images/logo.jpg" alt="Logo">
+            </div>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="content.html"><i class="fas fa-play-circle"></i> Content Library</a></li>
+                <li><a href="resources.html" class="active"><i class="fas fa-book"></i> Resources</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li class="Ap"><a href="login.html" class="auth-btn login-btn"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            </ul>
+        </nav>
+
+        <main class="content-area">
+            <div class="resources-hero">
+                <h1>Trading Resources & Tools</h1>
+                <p>Access our curated collection of premium trading resources, tools, and educational materials to enhance your trading journey.</p>
+            </div>
+
+            <div class="resources-grid">
+                <div class="resource-card featured">
+                    <div class="resource-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="resource-content">
+                        <div class="featured-badge">Featured Resource</div>
+                        <h3>Inner Circle Trader (ICT)</h3>
+                        <p>Access premium trading education from ICT, featuring advanced market concepts, institutional trading methods, and professional trading strategies.</p>
+                        <div class="resource-tags">
+                            <span class="tag">ICT Method</span>
+                            <span class="tag">Market Structure</span>
+                            <span class="tag">Professional Trading</span>
+                        </div>
+                        <a href="https://www.youtube.com/c/InnerCircleTrader" class="resource-link" target="_blank">
+                            Watch ICT <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="resource-content">
+                        <h3>Technical Analysis Guide</h3>
+                        <p>Master the art of technical analysis with our comprehensive guide covering chart patterns, indicators, and trading strategies.</p>
+                        <div class="resource-tags">
+                            <span class="tag">Technical Analysis</span>
+                            <span class="tag">Charts</span>
+                            <span class="tag">Patterns</span>
+                        </div>
+                        <a href="#" class="resource-link">
+                            Access Guide <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="resource-content">
+                        <h3>Trading Psychology</h3>
+                        <p>Develop a winning mindset with our trading psychology resources. Learn emotional control, discipline, and decision-making.</p>
+                        <div class="resource-tags">
+                            <span class="tag">Psychology</span>
+                            <span class="tag">Mindset</span>
+                            <span class="tag">Discipline</span>
+                        </div>
+                        <a href="#" class="resource-link">
+                            Learn More <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div class="resource-content">
+                        <h3>Risk Management Tools</h3>
+                        <p>Access our suite of risk management calculators and tools to optimize your position sizing and risk control.</p>
+                        <div class="resource-tags">
+                            <span class="tag">Risk Management</span>
+                            <span class="tag">Calculators</span>
+                            <span class="tag">Tools</span>
+                        </div>
+                        <a href="#" class="resource-link">
+                            Use Tools <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="resource-content">
+                        <h3>Educational Library</h3>
+                        <p>Explore our extensive library of trading books, articles, and research papers to deepen your market knowledge.</p>
+                        <div class="resource-tags">
+                            <span class="tag">Education</span>
+                            <span class="tag">Research</span>
+                            <span class="tag">Library</span>
+                        </div>
+                        <a href="#" class="resource-link">
+                            Browse Library <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="resource-content">
+                        <h3>Community Forums</h3>
+                        <p>Join our active trading community to discuss strategies, share insights, and learn from fellow traders.</p>
+                        <div class="resource-tags">
+                            <span class="tag">Community</span>
+                            <span class="tag">Discussion</span>
+                            <span class="tag">Network</span>
+                        </div>
+                        <a href="#" class="resource-link">
+                            Join Community <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="resource-content">
+                        <h3>Video Tutorials</h3>
+                        <p>Watch in-depth video tutorials on trading strategies, market analysis, and platform usage.</p>
+                        <div class="resource-tags">
+                            <span class="tag">Videos</span>
+                            <span class="tag">Tutorials</span>
+                            <span class="tag">Learning</span>
+                        </div>
+                        <a href="#" class="resource-link">
+                            Watch Now <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html>
