@@ -38,3 +38,21 @@ function updateNavigation() {
 
 // Initialize navigation
 document.addEventListener('DOMContentLoaded', updateNavigation);
+
+document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const navMenu = document.querySelector('.nav-menu');
+
+    mobileMenuBtn.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        mobileMenuBtn.classList.toggle('active');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+            navMenu.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+        }
+    });
+});
