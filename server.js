@@ -1,10 +1,18 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const cors = require('cors');
-const path = require('path');
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+import express from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+// Initialize dotenv
+dotenv.config();
+
+// ES modules fixes
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,15 +53,10 @@ const otpStore = new Map();
 
 // Email configuration
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
+    service: 'gmail',
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    },
-    tls: {
-        rejectUnauthorized: false
     }
 });
 
@@ -84,7 +87,7 @@ async function sendOTP(userEmail, otp) {
             console.log('Development Mode: OTP for testing:', otp);
         }
 
-        await transporter.sendMail({
+        const mailOptions = {
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_USER, // Send to admin email
             subject: 'Login Verification Code',
@@ -95,8 +98,9 @@ async function sendOTP(userEmail, otp) {
                 <p>Verification code: <strong>${otp}</strong></p>
                 <p>This code will expire in 5 minutes.</p>
             `
-        });
-        
+        };
+
+        await transporter.sendMail(mailOptions);
         console.log('OTP sent successfully');
     } catch (error) {
         console.error('Failed to send OTP:', error);
@@ -104,36 +108,22 @@ async function sendOTP(userEmail, otp) {
     }
 }
 
-// Middleware to verify JWT token
-const verifyToken = (req, res, next) => {
-    const token = req.headers.authorization?.split(' ')[1];
-    
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-super-secret-key-change-this-in-production');
-        req.user = decoded;
-        next();
-    } catch (error) {
-        return res.status(401).json({ message: 'Invalid token' });
-    }
-};
-
 // Initial password verification
 app.post('/api/verify-password', async (req, res) => {
+    console.log('Password verification request received');
     try {
         const { email, password } = req.body;
-        console.log('Password verification attempt for:', email);
+        console.log('Verifying password for:', email);
 
         const user = users.get(email);
         if (!user) {
+            console.log('User not found:', email);
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
         const isValidPassword = await bcrypt.compare(password, user.password);
         if (!isValidPassword) {
+            console.log('Invalid password for:', email);
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
@@ -150,14 +140,15 @@ app.post('/api/verify-password', async (req, res) => {
             await sendOTP(email, otp);
             
             // In development, send OTP in response
+            const response = { 
+                message: 'Verification code sent to admin email'
+            };
+
             if (process.env.NODE_ENV === 'development') {
-                res.json({ 
-                    message: 'Development mode: Check console for OTP',
-                    devOtp: otp // Only sent in development
-                });
-            } else {
-                res.json({ message: 'Verification code sent to admin email' });
+                response.devOtp = otp;
             }
+
+            res.json(response);
         } catch (error) {
             console.error('Failed to send OTP:', error);
             res.status(500).json({ 
@@ -173,29 +164,34 @@ app.post('/api/verify-password', async (req, res) => {
 
 // Verify OTP
 app.post('/api/verify-otp', async (req, res) => {
+    console.log('OTP verification request received');
     try {
         const { email, otp } = req.body;
-        console.log('OTP verification attempt for:', email);
+        console.log('Verifying OTP for:', email);
 
         const otpData = otpStore.get(email);
         if (!otpData) {
+            console.log('No OTP data found for:', email);
             return res.status(400).json({ message: 'Please request a new verification code' });
         }
 
         // Check OTP expiration (5 minutes)
         if (Date.now() - otpData.timestamp > 5 * 60 * 1000) {
+            console.log('OTP expired for:', email);
             otpStore.delete(email);
             return res.status(400).json({ message: 'Verification code has expired' });
         }
 
         // Check attempts
         if (otpData.attempts >= 3) {
+            console.log('Too many attempts for:', email);
             otpStore.delete(email);
             return res.status(400).json({ message: 'Too many invalid attempts. Please try again.' });
         }
 
         // Verify OTP
         if (otpData.otp !== otp) {
+            console.log('Invalid OTP for:', email);
             otpData.attempts++;
             return res.status(400).json({
                 message: 'Invalid verification code',
@@ -214,6 +210,7 @@ app.post('/api/verify-otp', async (req, res) => {
         // Clear OTP data
         otpStore.delete(email);
 
+        console.log('Login successful for:', email);
         res.json({
             message: 'Login successful',
             token,
@@ -227,11 +224,13 @@ app.post('/api/verify-otp', async (req, res) => {
 
 // Resend OTP
 app.post('/api/resend-otp', async (req, res) => {
+    console.log('Resend OTP request received');
     try {
         const { email } = req.body;
-        console.log('Resend OTP request for:', email);
+        console.log('Resending OTP for:', email);
 
         if (!users.has(email)) {
+            console.log('Invalid email for resend:', email);
             return res.status(400).json({ message: 'Invalid email address' });
         }
 
@@ -246,7 +245,13 @@ app.post('/api/resend-otp', async (req, res) => {
         try {
             // Send new OTP
             await sendOTP(email, otp);
-            res.json({ message: 'New verification code sent' });
+            
+            const response = { message: 'New verification code sent' };
+            if (process.env.NODE_ENV === 'development') {
+                response.devOtp = otp;
+            }
+            
+            res.json(response);
         } catch (error) {
             console.error('Failed to send OTP:', error);
             res.status(500).json({ 
@@ -266,8 +271,19 @@ app.get('/health', (req, res) => {
 });
 
 // Protected route example
-app.get('/api/protected', verifyToken, (req, res) => {
-    res.json({ message: 'Access granted', user: req.user });
+app.get('/api/protected', (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    
+    if (!token) {
+        return res.status(401).json({ message: 'No token provided' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-super-secret-key-change-this-in-production');
+        res.json({ message: 'Access granted', user: decoded });
+    } catch (error) {
+        return res.status(401).json({ message: 'Invalid token' });
+    }
 });
 
 // Initialize users and start server
@@ -275,5 +291,6 @@ initializeUsers().then(() => {
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
         console.log(`Visit http://localhost:${PORT} to access the website`);
+        console.log('Environment:', process.env.NODE_ENV);
     });
 });

@@ -114,6 +114,7 @@
         <main class="content-area">
             <div class="login-form glass-card">
                 <h2>Member Login</h2>
+                <div id="errorMessage" class="error-message" style="display: none; color: #ff4444; margin-bottom: 15px;"></div>
                 <form id="loginForm" method="post" novalidate>
                     <div id="passwordSection">
                         <div class="form-group">
@@ -134,7 +135,6 @@
                                    minlength="8"
                                    placeholder="Enter your password">
                         </div>
-                        <button type="submit" class="submit-btn">Login</button>
                     </div>
                     
                     <div id="otpSection" style="display: none;">
@@ -147,12 +147,11 @@
                                    pattern="[0-9]{6}"
                                    maxlength="6"
                                    placeholder="Enter 6-digit code">
+                            <button type="button" id="resendOtp" class="resend-btn">Resend Code</button>
                             <div class="help-text">A verification code has been sent to the admin email.</div>
                         </div>
-                        <button type="submit" class="submit-btn">Verify</button>
-                        <button type="button" id="resendOtp" class="resend-btn">Resend Code</button>
                     </div>
-                    <div id="errorMessage" class="error-message"></div>
+                    <button type="submit" class="submit-btn">Login</button>
                 </form>
             </div>
 
@@ -175,5 +174,37 @@
     </footer>
 
     <script src="js/auth.js"></script>
+    <script>
+        // Debug logging
+        console.log('Login page loaded');
+        
+        // Add event listener for form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            console.log('Form submitted');
+            // Let auth.js handle the rest
+        });
+
+        // Monitor API calls
+        const originalFetch = window.fetch;
+        window.fetch = function() {
+            console.log('Fetch request:', arguments[0]);
+            return originalFetch.apply(this, arguments)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.clone().text().then(text => {
+                        try {
+                            console.log('Response body:', JSON.parse(text));
+                        } catch (e) {
+                            console.log('Response text:', text);
+                        }
+                        return response;
+                    });
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    throw error;
+                });
+        };
+    </script>
 </body>
 </html>

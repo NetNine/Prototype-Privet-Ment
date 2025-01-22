@@ -7,6 +7,8 @@ const API_BASE_URL = window.location.hostname === 'localhost' || window.location
     ? 'http://localhost:3000'  // Local development
     : 'https://paint-strengthened-coneflower.glitch.me';  // Glitch production URL
 
+console.log('Using API URL:', API_BASE_URL);
+
 // Form validation
 function validateEmail(email) {
     const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -22,6 +24,7 @@ function validateOTP(otp) {
 }
 
 function showError(message) {
+    console.log('Showing error:', message);
     const errorMessage = document.getElementById('errorMessage');
     if (errorMessage) {
         errorMessage.textContent = message;
@@ -36,15 +39,21 @@ function showError(message) {
 // Form submission handler
 document.getElementById('loginForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
+    console.log('Form submitted, current step:', currentAuthStep);
     
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const otpInput = document.getElementById('otp');
     const otpSection = document.getElementById('otpSection');
     const passwordSection = document.getElementById('passwordSection');
+    const submitButton = document.querySelector('button[type="submit"]');
     
     try {
         if (currentAuthStep === 'password') {
+            console.log('Processing password step');
+            submitButton.textContent = 'Verifying...';
+            submitButton.disabled = true;
+
             // Validate email and password
             if (!emailInput?.value) {
                 showError('Please enter your email address');
@@ -70,6 +79,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
                 return;
             }
 
+            console.log('Sending password verification request');
             const response = await fetch(`${API_BASE_URL}/api/verify-password`, {
                 method: 'POST',
                 headers: {
@@ -81,12 +91,11 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
                 })
             });
 
+            const data = await response.json();
+            
             if (!response.ok) {
-                const data = await response.json();
                 throw new Error(data.message || 'Invalid email or password');
             }
-
-            const data = await response.json();
             
             // Store email for OTP verification
             currentEmail = emailInput.value;
@@ -95,6 +104,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
             currentAuthStep = 'otp';
             passwordSection.style.display = 'none';
             otpSection.style.display = 'block';
+            submitButton.textContent = 'Verify Code';
             
             // Clear password field
             passwordInput.value = '';
@@ -102,8 +112,13 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
             // Show OTP in development mode
             if (data.devOtp) {
                 console.log('Development OTP:', data.devOtp);
+                showError('Check console for OTP (development mode only)');
             }
         } else {
+            console.log('Processing OTP step');
+            submitButton.textContent = 'Verifying...';
+            submitButton.disabled = true;
+
             // Validate OTP
             if (!otpInput?.value) {
                 showError('Please enter the verification code');
@@ -117,6 +132,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
                 return;
             }
 
+            console.log('Sending OTP verification request');
             const response = await fetch(`${API_BASE_URL}/api/verify-otp`, {
                 method: 'POST',
                 headers: {
@@ -128,13 +144,13 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
                 })
             });
 
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || 'Invalid verification code');
-            }
-
             const data = await response.json();
             
+            if (!response.ok) {
+                throw new Error(data.message || 'Invalid verification code');
+            }
+            
+            console.log('Login successful, storing token');
             // Store authentication data
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
@@ -143,13 +159,19 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
             window.location.href = 'content.html';
         }
     } catch (error) {
-        showError(error.message);
         console.error('Login error:', error);
+        showError(error.message);
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = currentAuthStep === 'password' ? 'Login' : 'Verify Code';
     }
 });
 
 // Resend OTP button handler
 document.getElementById('resendOtp')?.addEventListener('click', async function() {
+    const submitButton = document.querySelector('button[type="submit"]');
+    const resendButton = document.getElementById('resendOtp');
+    
     try {
         if (!currentEmail) {
             showError('Please start the login process again');
@@ -157,6 +179,10 @@ document.getElementById('resendOtp')?.addEventListener('click', async function()
             return;
         }
 
+        resendButton.disabled = true;
+        resendButton.textContent = 'Sending...';
+
+        console.log('Requesting new OTP for:', currentEmail);
         const response = await fetch(`${API_BASE_URL}/api/resend-otp`, {
             method: 'POST',
             headers: {
@@ -165,12 +191,12 @@ document.getElementById('resendOtp')?.addEventListener('click', async function()
             body: JSON.stringify({ email: currentEmail })
         });
 
+        const data = await response.json();
+        
         if (!response.ok) {
-            const data = await response.json();
             throw new Error(data.message || 'Failed to resend verification code');
         }
 
-        const data = await response.json();
         showError('New verification code sent');
         
         // Show OTP in development mode
@@ -178,8 +204,11 @@ document.getElementById('resendOtp')?.addEventListener('click', async function()
             console.log('Development OTP:', data.devOtp);
         }
     } catch (error) {
-        showError(error.message);
         console.error('Resend OTP error:', error);
+        showError(error.message);
+    } finally {
+        resendButton.disabled = false;
+        resendButton.textContent = 'Resend Code';
     }
 });
 
