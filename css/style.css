@@ -91,7 +91,7 @@ body {
 .glass-nav ul .Ap{
     list-style: none;
     margin: 0;
-    padding-bottom: 3rem;
+    margin-right: 0rem;
 }
 
 .glass-nav a {
