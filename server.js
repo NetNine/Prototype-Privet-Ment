@@ -22,13 +22,14 @@ const allowedOrigins = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'https://netmine.github.io',
-    'https://netmine.github.io/Prototype-Privet-Ment',
-    'https://paint-strengthened-coneflower.glitch.me'
+    'https://paint-strengthened-coneflower.glitch.me',
+    'https://thaviru89.github.io'
 ];
 
 const corsOptions = {
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        console.log('Request from origin:', origin);
+        if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             console.log('Blocked by CORS:', origin);

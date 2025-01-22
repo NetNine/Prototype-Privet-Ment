@@ -59,12 +59,11 @@
 
         .error-message {
             color: #ff4444;
-            margin-top: 1rem;
-            text-align: center;
-            display: none;
-            padding: 0.5rem;
+            margin: 10px 0;
+            padding: 10px;
             border-radius: 4px;
-            background: rgba(255, 68, 68, 0.1);
+            background-color: rgba(255, 68, 68, 0.1);
+            display: none;
         }
 
         .help-text {
@@ -92,6 +91,7 @@
 
         #otpSection {
             margin-top: 1rem;
+            display: none;
         }
     </style>
 </head>
@@ -114,7 +114,7 @@
         <main class="content-area">
             <div class="login-form glass-card">
                 <h2>Member Login</h2>
-                <div id="errorMessage" class="error-message" style="display: none; color: #ff4444; margin-bottom: 15px;"></div>
+                <div id="errorMessage" class="error-message"></div>
                 <form id="loginForm" method="post" novalidate>
                     <div id="passwordSection">
                         <div class="form-group">
@@ -137,7 +137,7 @@
                         </div>
                     </div>
                     
-                    <div id="otpSection" style="display: none;">
+                    <div id="otpSection">
                         <div class="form-group">
                             <label for="otp">Verification Code</label>
                             <input type="text" 
@@ -147,8 +147,8 @@
                                    pattern="[0-9]{6}"
                                    maxlength="6"
                                    placeholder="Enter 6-digit code">
+                            <p class="help-text">A verification code has been sent to the admin email.</p>
                             <button type="button" id="resendOtp" class="resend-btn">Resend Code</button>
-                            <div class="help-text">A verification code has been sent to the admin email.</div>
                         </div>
                     </div>
                     <button type="submit" class="submit-btn">Login</button>
