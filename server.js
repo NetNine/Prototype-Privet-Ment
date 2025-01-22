@@ -12,7 +12,9 @@ const PORT = process.env.PORT || 3000;
 // Basic middleware
 app.use(express.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname)));
+
+// Serve static files from the root directory
+app.use(express.static(__dirname));
 
 // In-memory stores
 const users = new Map();
@@ -41,9 +43,6 @@ const initializeUsers = async () => {
             name: 'User'
         });
         console.log('Default user initialized');
-        console.log('Login credentials:');
-        console.log('Email: user930@gmail.com');
-        console.log('Password:', process.env.INITIAL_PASSWORD || 'GTM2024#User');
     } catch (error) {
         console.error('Error initializing users:', error);
     }
@@ -58,9 +57,8 @@ function generateOTP() {
 async function sendOTP(userEmail, otp) {
     try {
         // Log OTP in development mode
-        if (process.env.NODE_ENV !== 'production') {
+        if (process.env.NODE_ENV === 'development') {
             console.log('Development Mode: OTP for testing:', otp);
-            return;
         }
 
         await transporter.sendMail({
@@ -129,9 +127,9 @@ app.post('/api/verify-password', async (req, res) => {
             await sendOTP(email, otp);
             
             // In development, send OTP in response
-            if (process.env.NODE_ENV !== 'production') {
+            if (process.env.NODE_ENV === 'development') {
                 res.json({ 
-                    message: 'Development mode: Check server console for OTP',
+                    message: 'Development mode: Check console for OTP',
                     devOtp: otp // Only sent in development
                 });
             } else {
@@ -139,18 +137,10 @@ app.post('/api/verify-password', async (req, res) => {
             }
         } catch (error) {
             console.error('Failed to send OTP:', error);
-            // In development, still allow login with OTP
-            if (process.env.NODE_ENV !== 'production') {
-                res.json({ 
-                    message: 'Development mode: Check server console for OTP',
-                    devOtp: otp // Only sent in development
-                });
-            } else {
-                res.status(500).json({ 
-                    message: 'Failed to send verification code. Please try again.',
-                    details: process.env.NODE_ENV === 'development' ? error.message : undefined
-                });
-            }
+            res.status(500).json({ 
+                message: 'Failed to send verification code. Please try again.',
+                details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
         }
     } catch (error) {
         console.error('Password verification error:', error);
@@ -169,16 +159,16 @@ app.post('/api/verify-otp', async (req, res) => {
             return res.status(400).json({ message: 'Please request a new verification code' });
         }
 
-        // Check if OTP is expired (5 minutes)
+        // Check OTP expiration (5 minutes)
         if (Date.now() - otpData.timestamp > 5 * 60 * 1000) {
             otpStore.delete(email);
-            return res.status(400).json({ message: 'Verification code expired. Please request a new one.' });
+            return res.status(400).json({ message: 'Verification code has expired' });
         }
 
         // Check attempts
         if (otpData.attempts >= 3) {
             otpStore.delete(email);
-            return res.status(400).json({ message: 'Too many attempts. Please request a new verification code.' });
+            return res.status(400).json({ message: 'Too many invalid attempts. Please try again.' });
         }
 
         // Verify OTP
@@ -233,11 +223,11 @@ app.post('/api/resend-otp', async (req, res) => {
         try {
             // Send new OTP
             await sendOTP(email, otp);
-            res.json({ message: 'New verification code sent to admin email' });
+            res.json({ message: 'New verification code sent' });
         } catch (error) {
             console.error('Failed to send OTP:', error);
             res.status(500).json({ 
-                message: 'Failed to send verification code. Please check email configuration.',
+                message: 'Failed to send verification code',
                 details: process.env.NODE_ENV === 'development' ? error.message : undefined
             });
         }
@@ -247,27 +237,14 @@ app.post('/api/resend-otp', async (req, res) => {
     }
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok' });
+});
+
 // Protected route example
 app.get('/api/protected', verifyToken, (req, res) => {
     res.json({ message: 'Access granted', user: req.user });
-});
-
-// Serve static files
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'login.html'));
-});
-
-// Protected routes
-app.get('/resources', verifyToken, (req, res) => {
-    res.sendFile(path.join(__dirname, 'resources.html'));
-});
-
-app.get('/contact', verifyToken, (req, res) => {
-    res.sendFile(path.join(__dirname, 'contact.html'));
 });
 
 // Initialize users and start server
