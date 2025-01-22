@@ -2,6 +2,11 @@
 let currentAuthStep = 'password'; // 'password' or 'otp'
 let currentEmail = ''; // Store email for OTP verification
 
+// API Configuration
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:3000'  // Local development
+    : 'https://paint-strengthened-coneflower.glitch.me';  // Glitch production URL
+
 // Form validation
 function validateEmail(email) {
     const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -65,7 +70,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
                 return;
             }
 
-            const response = await fetch('/api/verify-password', {
+            const response = await fetch(`${API_BASE_URL}/api/verify-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -76,11 +81,12 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
                 })
             });
 
-            const data = await response.json();
-            
             if (!response.ok) {
+                const data = await response.json();
                 throw new Error(data.message || 'Invalid email or password');
             }
+
+            const data = await response.json();
             
             // Store email for OTP verification
             currentEmail = emailInput.value;
@@ -111,7 +117,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
                 return;
             }
 
-            const response = await fetch('/api/verify-otp', {
+            const response = await fetch(`${API_BASE_URL}/api/verify-otp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -122,11 +128,12 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
                 })
             });
 
-            const data = await response.json();
-            
             if (!response.ok) {
+                const data = await response.json();
                 throw new Error(data.message || 'Invalid verification code');
             }
+
+            const data = await response.json();
             
             // Store authentication data
             localStorage.setItem('token', data.token);
@@ -150,7 +157,7 @@ document.getElementById('resendOtp')?.addEventListener('click', async function()
             return;
         }
 
-        const response = await fetch('/api/resend-otp', {
+        const response = await fetch(`${API_BASE_URL}/api/resend-otp`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -158,12 +165,12 @@ document.getElementById('resendOtp')?.addEventListener('click', async function()
             body: JSON.stringify({ email: currentEmail })
         });
 
-        const data = await response.json();
-        
         if (!response.ok) {
+            const data = await response.json();
             throw new Error(data.message || 'Failed to resend verification code');
         }
-        
+
+        const data = await response.json();
         showError('New verification code sent');
         
         // Show OTP in development mode

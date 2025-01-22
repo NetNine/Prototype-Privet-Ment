@@ -9,9 +9,32 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// CORS configuration
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://netmine.github.io',
+    'https://netmine.github.io/Prototype-Privet-Ment',
+    'https://paint-strengthened-coneflower.glitch.me'
+];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.log('Blocked by CORS:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST'],
+    credentials: true,
+    optionsSuccessStatus: 204
+};
+
 // Basic middleware
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cors());
 
 // Serve static files from the root directory
 app.use(express.static(__dirname));
