@@ -65,34 +65,6 @@
             background-color: rgba(255, 68, 68, 0.1);
             display: none;
         }
-
-        .help-text {
-            color: var(--primary-color);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        .resend-btn {
-            width: 100%;
-            padding: 0.8rem;
-            background: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .resend-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        #otpSection {
-            margin-top: 1rem;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -116,40 +88,23 @@
                 <h2>Member Login</h2>
                 <div id="errorMessage" class="error-message"></div>
                 <form id="loginForm" method="post" novalidate>
-                    <div id="passwordSection">
-                        <div class="form-group">
-                            <label for="email">Email (Gmail)</label>
-                            <input type="email" 
-                                   id="email" 
-                                   name="email" 
-                                   required 
-                                   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                                   placeholder="Enter your Gmail address">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" 
-                                   id="password" 
-                                   name="password" 
-                                   required 
-                                   minlength="8"
-                                   placeholder="Enter your password">
-                        </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" 
+                               id="email" 
+                               name="email" 
+                               required 
+                               pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                               placeholder="Enter your email address">
                     </div>
-                    
-                    <div id="otpSection">
-                        <div class="form-group">
-                            <label for="otp">Verification Code</label>
-                            <input type="text" 
-                                   id="otp" 
-                                   name="otp" 
-                                   required
-                                   pattern="[0-9]{6}"
-                                   maxlength="6"
-                                   placeholder="Enter 6-digit code">
-                            <p class="help-text">A verification code has been sent to the admin email.</p>
-                            <button type="button" id="resendOtp" class="resend-btn">Resend Code</button>
-                        </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" 
+                               id="password" 
+                               name="password" 
+                               required 
+                               minlength="8"
+                               placeholder="Enter your password">
                     </div>
                     <button type="submit" class="submit-btn">Login</button>
                 </form>

@@ -1,0 +1,79 @@
+{"level":"info","message":"Default user initialized","timestamp":"2025-02-08T18:38:35.873Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-08T18:38:35.884Z"}
+{"level":"info","message":"Visit http://localhost:3000 to access the website","timestamp":"2025-02-08T18:38:35.885Z"}
+{"level":"info","message":"Environment: undefined","timestamp":"2025-02-08T18:38:35.885Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:22.495Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:22.595Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:22.623Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:22.625Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:22.705Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:22.712Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:22.715Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:23.844Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:25.418Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:27.477Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:27.676Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:27.704Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:27.718Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:27.730Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:27.742Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:27.747Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:27.894Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:28.116Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:28.126Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:39:28.128Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:42:32.500Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:42:32.706Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:42:32.718Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:42:32.733Z"}
+{"level":"info","message":"Default user initialized","timestamp":"2025-02-08T18:49:16.312Z"}
+{"level":"info","message":"Server running on port 3000","timestamp":"2025-02-08T18:49:16.319Z"}
+{"level":"info","message":"Visit http://localhost:3000 to access the website","timestamp":"2025-02-08T18:49:16.319Z"}
+{"level":"info","message":"Environment: undefined","timestamp":"2025-02-08T18:49:16.320Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:33.525Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:33.598Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:33.603Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:33.604Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:41.178Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:41.233Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:41.253Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:41.255Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:41.257Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:41.258Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:41.260Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:41.277Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.130Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.193Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.217Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.219Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.220Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.221Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.222Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.303Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.386Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.387Z"}
+{"level":"info","message":"Request from origin:","timestamp":"2025-02-08T18:49:43.388Z"}
+{"level":"info","message":"Request from origin:","origin":"http://localhost:3000","timestamp":"2025-02-08T18:49:52.179Z"}
+{"level":"info","message":"Password verification request received","timestamp":"2025-02-08T18:49:52.203Z"}
+{"email":"user930@gmail.com","level":"info","message":"Verifying password for:","timestamp":"2025-02-08T18:49:52.203Z"}
+{"error":{},"level":"error","message":"Password verification error:","timestamp":"2025-02-08T18:49:52.287Z"}
+{"level":"info","message":"Request from origin:","origin":"http://localhost:3000","timestamp":"2025-02-08T18:49:54.751Z"}
+{"level":"info","message":"Password verification request received","timestamp":"2025-02-08T18:49:54.754Z"}
+{"email":"user930@gmail.com","level":"info","message":"Verifying password for:","timestamp":"2025-02-08T18:49:54.755Z"}
+{"error":{},"level":"error","message":"Password verification error:","timestamp":"2025-02-08T18:49:54.862Z"}
+{"level":"info","message":"Request from origin:","origin":"http://localhost:3000","timestamp":"2025-02-08T18:49:56.991Z"}
+{"level":"info","message":"Password verification request received","timestamp":"2025-02-08T18:49:56.995Z"}
+{"email":"user930@gmail.com","level":"info","message":"Verifying password for:","timestamp":"2025-02-08T18:49:56.996Z"}
+{"error":{},"level":"error","message":"Password verification error:","timestamp":"2025-02-08T18:49:57.108Z"}
+{"level":"info","message":"Request from origin:","origin":"http://localhost:3000","timestamp":"2025-02-08T18:49:58.849Z"}
+{"level":"info","message":"Password verification request received","timestamp":"2025-02-08T18:49:58.852Z"}
+{"email":"user930@gmail.com","level":"info","message":"Verifying password for:","timestamp":"2025-02-08T18:49:58.853Z"}
+{"error":{},"level":"error","message":"Password verification error:","timestamp":"2025-02-08T18:49:58.974Z"}
+{"level":"info","message":"Request from origin:","origin":"http://localhost:3000","timestamp":"2025-02-08T18:50:01.649Z"}
+{"level":"info","message":"Password verification request received","timestamp":"2025-02-08T18:50:01.651Z"}
+{"email":"user930@gmail.com","level":"info","message":"Verifying password for:","timestamp":"2025-02-08T18:50:01.651Z"}
+{"error":{},"level":"error","message":"Password verification error:","timestamp":"2025-02-08T18:50:01.771Z"}
+{"level":"info","message":"Request from origin:","origin":"http://localhost:3000","timestamp":"2025-02-08T18:50:04.939Z"}
+{"level":"info","message":"Password verification request received","timestamp":"2025-02-08T18:50:04.941Z"}
+{"email":"user930@gmail.com","level":"info","message":"Verifying password for:","timestamp":"2025-02-08T18:50:04.941Z"}
+{"error":{},"level":"error","message":"Password verification error:","timestamp":"2025-02-08T18:50:05.044Z"}
