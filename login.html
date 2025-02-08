@@ -87,7 +87,7 @@
             <div class="login-form glass-card">
                 <h2>Member Login</h2>
                 <div id="errorMessage" class="error-message"></div>
-                <form id="loginForm" method="post" novalidate>
+                <form id="loginForm" novalidate>
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" 
@@ -115,7 +115,7 @@
                 <p>Dear User,</p>
                 <p>Here are your login credentials for accessing the premium content:</p>
                 <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                    <p><strong>Email:</strong> User@gmail.com</p>
+                    <p><strong>Email:</strong> user930@gmail.com</p>
                     <p><strong>Password:</strong> GTM2024#User</p>
                 </div>
                 <p>Please keep these credentials safe and do not share them with others.</p>
@@ -129,37 +129,5 @@
     </footer>
 
     <script src="js/auth.js"></script>
-    <script>
-        // Debug logging
-        console.log('Login page loaded');
-        
-        // Add event listener for form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            console.log('Form submitted');
-            // Let auth.js handle the rest
-        });
-
-        // Monitor API calls
-        const originalFetch = window.fetch;
-        window.fetch = function() {
-            console.log('Fetch request:', arguments[0]);
-            return originalFetch.apply(this, arguments)
-                .then(response => {
-                    console.log('Response status:', response.status);
-                    return response.clone().text().then(text => {
-                        try {
-                            console.log('Response body:', JSON.parse(text));
-                        } catch (e) {
-                            console.log('Response text:', text);
-                        }
-                        return response;
-                    });
-                })
-                .catch(error => {
-                    console.error('Fetch error:', error);
-                    throw error;
-                });
-        };
-    </script>
 </body>
 </html>

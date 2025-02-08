@@ -2,19 +2,10 @@
 let currentAuthStep = 'password'; // 'password' or 'otp'
 let currentEmail = ''; // Store email for OTP verification
 
-// API Configuration
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000'
-    : 'https://paint-strengthened-coneflower.glitch.me';
-
-// Common fetch options
-const fetchOptions = {
-    mode: 'cors',
-    credentials: 'include',
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
+// Hardcoded credentials (for demo purposes only)
+const VALID_CREDENTIALS = {
+    email: 'user930@gmail.com',
+    password: 'GTM2024#User'
 };
 
 // DOM Elements
@@ -72,26 +63,20 @@ loginForm.addEventListener('submit', async (e) => {
             return;
         }
 
-        // Send login request
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.message || 'Login failed');
+        // Check credentials
+        if (email === VALID_CREDENTIALS.email && password === VALID_CREDENTIALS.password) {
+            // Store auth data
+            const user = { email, name: 'User' };
+            const token = btoa(JSON.stringify({ email, timestamp: Date.now() })); // Simple token for demo
+            
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            // Redirect to content page
+            window.location.href = 'content.html';
+        } else {
+            throw new Error('Invalid email or password');
         }
-
-        // Store auth data and redirect
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        window.location.href = 'content.html';
-        
     } catch (error) {
         showError(error.message || 'An error occurred during login');
     } finally {
@@ -121,7 +106,8 @@ function updateNavigation() {
     if (loginBtn) {
         if (token) {
             loginBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-            loginBtn.addEventListener('click', logout);
+            loginBtn.href = 'javascript:void(0)';
+            loginBtn.onclick = logout;
         } else {
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
         }
