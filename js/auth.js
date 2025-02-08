@@ -33,52 +33,47 @@ function validatePassword(password) {
 }
 
 // Handle form submission
-loginForm.addEventListener('submit', async (e) => {
+loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
-    const email = document.getElementById('email').value;
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
     submitButton.disabled = true;
     
     try {
-        // Validate inputs
-        if (!email) {
-            showError('Please enter your email address');
-            return;
-        }
-
-        if (!validateEmail(email)) {
+        // Basic validation
+        if (!email || !validateEmail(email)) {
             showError('Please enter a valid email address');
             return;
         }
 
-        if (!password) {
-            showError('Please enter your password');
-            return;
-        }
-
-        if (!validatePassword(password)) {
+        if (!password || !validatePassword(password)) {
             showError('Password must be at least 8 characters long');
             return;
         }
 
-        // Check credentials
+        // Simple credential check
         if (email === VALID_CREDENTIALS.email && password === VALID_CREDENTIALS.password) {
-            // Store auth data
-            const user = { email, name: 'User' };
-            const token = btoa(JSON.stringify({ email, timestamp: Date.now() })); // Simple token for demo
+            // Create user session
+            const user = { 
+                email,
+                name: 'User',
+                loginTime: new Date().toISOString()
+            };
             
-            localStorage.setItem('token', token);
+            // Store in localStorage
             localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('isLoggedIn', 'true');
             
             // Redirect to content page
             window.location.href = 'content.html';
         } else {
-            throw new Error('Invalid email or password');
+            showError('Invalid email or password');
         }
     } catch (error) {
-        showError(error.message || 'An error occurred during login');
+        showError('An error occurred during login');
+        console.error('Login error:', error);
     } finally {
         submitButton.disabled = false;
     }
@@ -86,30 +81,33 @@ loginForm.addEventListener('submit', async (e) => {
 
 // Check if user is already logged in
 function checkAuth() {
-    const token = localStorage.getItem('token');
-    if (token && window.location.pathname.endsWith('login.html')) {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (isLoggedIn && window.location.pathname.endsWith('login.html')) {
         window.location.href = 'content.html';
     }
 }
 
 // Logout function
 function logout() {
-    localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('isLoggedIn');
     window.location.href = 'login.html';
 }
 
 // Update navigation based on auth status
 function updateNavigation() {
-    const token = localStorage.getItem('token');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const loginBtn = document.querySelector('.login-btn');
+    
     if (loginBtn) {
-        if (token) {
+        if (isLoggedIn) {
             loginBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
             loginBtn.href = 'javascript:void(0)';
             loginBtn.onclick = logout;
         } else {
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+            loginBtn.href = 'login.html';
+            loginBtn.onclick = null;
         }
     }
 }
