@@ -240,10 +240,18 @@ function addUserDataManually() {
 }
 
 function loadUserData() {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    console.log('User data loaded:', users);
     populateUserTable();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     loadUserData();
     document.getElementById("remove-users").addEventListener("click", removeSelectedUsers);
+});
+
+document.addEventListener('storage', (event) => {
+    if (event.key === 'users') {
+        loadUserData();
+    }
 });
