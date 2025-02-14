@@ -115,14 +115,19 @@ function populateUserTable() {
     userTableBody.innerHTML = "";
 
     users.forEach((user, index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td><input type="checkbox" data-index="${index}"></td>
-            <td>${atob(user.email)}</td>
-            <td>${user.name}</td>
-            <td><button onclick="removeUser(${index})">Remove</button></td>
-        `;
-        userTableBody.appendChild(row);
+        try {
+            const email = atob(user.email);
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td><input type="checkbox" data-index="${index}"></td>
+                <td>${email}</td>
+                <td>${user.name}</td>
+                <td><button onclick="removeUser(${index})">Remove</button></td>
+            `;
+            userTableBody.appendChild(row);
+        } catch (error) {
+            console.error("Error decoding email: ", error);
+        }
     });
 }
 
@@ -152,6 +157,11 @@ function addUser() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if (!email || !password) {
+        alert("Email and password are required!");
+        return;
+    }
 
     const user = {
         email: btoa(email),
