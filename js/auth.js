@@ -163,6 +163,16 @@ function addUser() {
         return;
     }
 
+    if (!validateEmail(email)) {
+        alert("Invalid email address!");
+        return;
+    }
+
+    if (!validatePassword(password)) {
+        alert("Password must be at least 8 characters long!");
+        return;
+    }
+
     const user = {
         email: btoa(email),
         password: btoa(password),
@@ -179,6 +189,21 @@ function loginUser() {
     const email = document.getElementById("login-email").value;
     const password = document.getElementById("login-password").value;
     const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if (!email || !password) {
+        alert("Email and password are required!");
+        return;
+    }
+
+    if (!validateEmail(email)) {
+        alert("Invalid email address!");
+        return;
+    }
+
+    if (!validatePassword(password)) {
+        alert("Password must be at least 8 characters long!");
+        return;
+    }
 
     const encryptedEmail = btoa(email);
     const encryptedPassword = btoa(password);
