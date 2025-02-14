@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #ffcc00;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #333333;
+        }
+        tr:hover {
+            background-color: #575757;
+        }
+        button {
+            background-color: #ffcc00;
+            border: none;
+            padding: 10px 20px;
+            color: #333333;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #e6b800;
+        }
+        input[type="email"], input[type="password"] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        #admin-panel {
+            display: none;
+        }
+    </style>
+    <script>
+        // Simple encryption (for demo purposes only)
+        function encrypt(text) {
+            return btoa(text.split('').reverse().join(''));
+        }
+
+        function addUser() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const userExists = users.some(user => user.email === encrypt(email));
+
+            if (userExists) {
+                alert("Email Already Exists!");
+            } else {
+                users.push({ email: encrypt(email), password: encrypt(password) });
+                localStorage.setItem("users", JSON.stringify(users));
+                alert("User Added Successfully!");
+                populateUserTable();
+            }
+        }
+
+        function populateUserTable() {
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const userTableBody = document.getElementById("user-table-body");
+
+            userTableBody.innerHTML = "";
+
+            users.forEach((user, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td><input type="checkbox" data-index="${index}"></td>
+                    <td>${atob(user.email.split('').reverse().join(''))}</td>
+                    <td></td>
+                    <td></td>
+                `;
+                userTableBody.appendChild(row);
+            });
+        }
+
+        function removeSelectedUsers() {
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+            const checkboxes = document.querySelectorAll("#user-table-body input[type='checkbox']");
+
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    const index = checkbox.getAttribute("data-index");
+                    users.splice(index, 1);
+                }
+            });
+
+            localStorage.setItem("users", JSON.stringify(users));
+            populateUserTable();
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('admin-password').value;
+            if (password === 'admin#&7') {
+                document.getElementById('password-prompt').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+            } else {
+                alert('Incorrect password!');
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            populateUserTable();
+            document.getElementById("remove-users").addEventListener("click", removeSelectedUsers);
+        });
+    </script>
+</head>
+<body>
+    <div id="password-prompt">
+        <h2>Enter Admin Password</h2>
+        <input type="password" id="admin-password" placeholder="Password">
+        <button onclick="checkAdminPassword()">Submit</button>
+    </div>
+
+    <div id="admin-panel">
+        <div class="section" id="add-user-section">
+            <h2>Admin Panel - Add Users</h2>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="addUser()">Add User</button>
+        </div>
+
+        <div class="section" id="user-management">
+            <h2>User Management</h2>
+            <table id="user-table">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                </tbody>
+            </table>
+            <button id="remove-users">Remove Selected Users</button>
+        </div>
+    </div>
+    <script src="js/auth.js"></script>
+</body>
+</html>
