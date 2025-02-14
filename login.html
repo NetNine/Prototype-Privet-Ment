@@ -65,6 +65,51 @@
             background-color: rgba(255, 68, 68, 0.1);
             display: none;
         }
+
+        .premium-content {
+            background: var(--glass-color);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .premium-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .premium-content p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            margin: 1.5rem 0;
+        }
+        
+        .buy-now-link {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        .buy-now-link:hover {
+            background: var(--primary-color);
+        }
+        
+        .note {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        
     </style>
 </head>
 <body>
@@ -110,16 +155,13 @@
                 </form>
             </div>
 
-            <div class="glass-card" style="margin-top: 2rem;">
-                <h3 style="color: var(--primary-color);">Your Login Credentials</h3>
-                <p>Dear User,</p>
-                <p>Here are your login credentials for accessing the premium content:</p>
-                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                    <p><strong>Email:</strong> user930@gmail.com</p>
-                    <p><strong>Password:</strong> GTM2024#User</p>
+            <div class="premium-content">
+                <h3>Access Premium Content</h3>
+                <p>Unlock exclusive trading insights and mentorship by purchasing our premium content package.</p>
+                <div class="cta-button">
+                    <a href="contact.html" class="buy-now-link">Buy Mentorship</a>
                 </div>
-                <p>Please keep these credentials safe and do not share them with others.</p>
-                <p style="color: var(--primary-color);">Note: This information will be removed once you've successfully logged in.</p>
+                <p class="note">Note: Gain immediate access to advanced strategies and expert guidance.</p>
             </div>
         </main>
     </div>

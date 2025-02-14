@@ -17,11 +17,13 @@
         }
 
         .resources-hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
             background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
+                    background-clip: text;
             -webkit-text-fill-color: transparent;
+                    color: transparent;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
         }
 
         .resources-hero p {
@@ -31,6 +33,215 @@
             margin: 0 auto;
         }
 
+        /* Resource Card Enhancements */
+        .resources-grid {
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .resource-card.featured {
+            padding: 0;
+            overflow: hidden;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-cover {
+            height: 280px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            position: relative;
+            background: linear-gradient(to bottom right, 
+                rgba(0, 255, 169, 0.1), 
+                rgba(0, 102, 255, 0.1));
+        }
+
+        .cover-link {
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-link:hover .book-cover {
+            transform: scale(1.03);
+        }
+
+        .cover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(0,0,0,0) 50%, 
+                rgba(0,0,0,0.7) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cover-link:hover .cover-overlay {
+            opacity: 1;
+        }
+
+        .preview-text {
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-meta {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Enhanced Book Details Styling */
+        .book-details {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .meta-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            padding: 0.5rem;
+            background: rgba(0, 255, 169, 0.1);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .meta-badge.prototype {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff4444;
+        }
+
+        .concept-title h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+
+        .edition {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Topic List Styling */
+        .topic-list {
+            padding: 0;
+            margin: 1rem 0;
+            list-style: none;
+        }
+
+        .topic-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+        }
+
+        .topic-list strong {
+            color: var(--primary-color);
+        }
+
+        .disclaimer {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #ff6666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Enhanced Book Details Styling */
+        .book-details {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        /* Meta Badge Styling */
+        .meta-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            padding: 0.5rem;
+            background: rgba(0, 255, 169, 0.1);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .meta-badge.prototype {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff4444;
+        }
+
+        /* Concept Title Styling */
+        .concept-title h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+        
+        .edition {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Topic List Styling */
+        .topic-list {
+            padding: 0;
+            margin: 1rem 0;
+            list-style: none;
+        }
+
+        .topic-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+        }
+
+        .topic-list strong {
+            color: var(--primary-color);
+        }
+
+        .disclaimer {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #ff6666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+}
         .resources-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -42,56 +253,43 @@
 
         .resource-card {
             background: var(--glass-color);
-            border: var(--glass-border);
             border-radius: 15px;
             padding: 2rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-
-        .resource-card.featured {
-            background: var(--featured-color);
-            border: var(--featured-border);
-        }
-
+        
         .resource-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
-            border-color: var(--primary-color);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
-
+        
         .resource-icon {
             font-size: 2.5rem;
             color: var(--primary-color);
             margin-bottom: 1.5rem;
             text-align: center;
         }
-
-        .resource-content {
-            flex: 1;
-        }
-
+        
         .resource-content h3 {
             color: var(--primary-color);
             margin: 0 0 1rem 0;
             font-size: 1.5rem;
         }
-
+        
         .resource-content p {
             color: rgba(255, 255, 255, 0.8);
             margin-bottom: 1.5rem;
             line-height: 1.6;
         }
-
+        
         .resource-tags {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
             margin-bottom: 1.5rem;
         }
-
+        
         .tag {
             background: rgba(0, 255, 136, 0.1);
             color: var(--primary-color);
@@ -99,7 +297,7 @@
             border-radius: 20px;
             font-size: 0.9rem;
         }
-
+        
         .resource-link {
             display: inline-flex;
             align-items: center;
@@ -113,7 +311,7 @@
             border-radius: 8px;
             background: rgba(0, 102, 255, 0.1);
         }
-
+        
         .resource-link:hover {
             background: var(--secondary-color);
             color: white;
@@ -167,24 +365,101 @@
             </div>
 
             <div class="resources-grid">
+                <!-- Book 1 - Goldbach Concept -->
                 <div class="resource-card featured">
-                    <div class="resource-icon">
-                        <i class="fab fa-youtube"></i>
+                  <a href="https://drive.google.com/file/d/1e9k8EdZ0TDTJYmKKYA7VYiCWOWBCgdqX/view" 
+                     target="_blank" 
+                     class="cover-link">
+                    <img src="images/analisys image/01.jpeg" 
+                         alt="Ghost Mechanism Guide" 
+                         class="book-cover">
+                    <div class="cover-overlay">
+                      <span class="preview-text">Explore Goldbach Concepts ↗</span>
                     </div>
-                    <div class="resource-content">
-                        <div class="featured-badge">Featured Resource</div>
-                        <h3>Inner Circle Trader (ICT)</h3>
-                        <p>Access premium trading education from ICT, featuring advanced market concepts, institutional trading methods, and professional trading strategies.</p>
-                        <div class="resource-tags">
-                            <span class="tag">ICT Method</span>
-                            <span class="tag">Market Structure</span>
-                            <span class="tag">Professional Trading</span>
-                        </div>
-                        <a href="https://www.youtube.com/c/InnerCircleTrader" class="resource-link" target="_blank">
-                            Watch ICT <i class="fas fa-external-link-alt"></i>
-                        </a>
+                  </a>
+                  <div class="card-body">
+                    <h3>Ghost of the Mechanism</h3>
+                    
+                    <div class="book-details">
+                      <div class="meta-badge">
+                        <i class="fas fa-copyright"></i>
+                        <span>HOPIPLAKA ORIGINAL CONCEPT</span>
+                      </div>
+                      
+                      <div class="concept-title">
+                        <h4>Goldbach Conjecture Framework</h4>
+                        <span class="edition">Sinhala v2.0.25</span>
+                      </div>
+              
+                      <ul class="topic-list">
+                        <li><strong>PO3 Dealing Ranges</strong> - Algorithmic patterns</li>
+                        <li>Market Symmetry & Projections</li>
+                        <li>Goldbach Number Strategies</li>
+                        <li>Trading Mechanism Design</li>
+                      </ul>
                     </div>
+                  </div>
                 </div>
+              
+                <!-- Book 2 - Algorithmic Delivery -->
+                <div class="resource-card featured">
+                  <a href="https://drive.google.com/file/d/1YpXoFiyi1tLTO8FeBqWJUQztM4e2lwWa/view" 
+                     target="_blank" 
+                     class="cover-link">
+                    <img src="images/analisys image/02.jpeg" 
+                         alt="Market Analysis Toolkit" 
+                         class="book-cover">
+                    <div class="cover-overlay">
+                      <span class="preview-text">View Algorithmic Models ↗</span>
+                    </div>
+                  </a>
+                  <div class="card-body">
+                    <h3>Market Analysis Companion</h3>
+              
+                    <div class="book-details">
+                      <div class="meta-badge prototype">
+                        <i class="fas fa-lock"></i>
+                        <span>PROTOTYPE FX INTELLECTUAL PROPERTY</span>
+                      </div>
+              
+                      <div class="concept-title">
+                        <h4>Algorithmic Price Delivery System</h4>
+                        <span class="edition">Advanced Toolkit</span>
+                      </div>
+              
+                      <ul class="topic-list">
+                        <li><strong>Opening Price CISD</strong> - Market Signature</li>
+                        <li>Rebalancing Models & Execution</li>
+                        <li>Bar Type Classification</li>
+                        <li>Video Tutorial Suite</li>
+                      </ul>
+                    </div>
+
+                    <div class="disclaimer">
+                      <i class="fas fa-exclamation-triangle"></i>
+                      Unauthorized distribution prohibited
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            <div class="resource-card">
+                <div class="resource-icon">
+                    <i class="fab fa-youtube"></i>
+                </div>
+                <div class="resource-content">
+                    <h3>Inner Circle Trader (ICT)</h3>
+                    <p>Access premium trading education from ICT, featuring advanced market concepts, institutional trading methods, and professional trading strategies.</p>
+                    <div class="resource-tags">
+                        <span class="tag">ICT Method</span>
+                        <span class="tag">Market Structure</span>
+                        <span class="tag">Professional Trading</span>
+                    </div>
+                    <a href="https://www.youtube.com/c/InnerCircleTrader" class="resource-link" target="_blank">
+                        Watch ICT <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
 
                 <div class="resource-card">
                     <div class="resource-icon">
