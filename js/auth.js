@@ -193,7 +193,54 @@ function loginUser() {
     }
 }
 
+function addUserDataManually() {
+    const users = [
+        { name: 'Dewmith', email: 'dewmrd930@gmail.com' },
+        { name: 'Deepal Weerasuriya', email: 'deepal.suranga29@gmail.com' },
+        { name: 'Tharusha Dilmin', email: 'dilmin23456@gmail.com' },
+        { name: 'Yusuf Hakeem', email: 'yusufhakeem503@gmail.com' },
+        { name: 'Lalanka Vishmika', email: 'mczayne123@gmail.com' },
+        { name: 'Sujani Nisansala', email: 'sujaninisansala01@gmail.com' },
+        { name: 'Methsitha Ratnayake', email: 'flexytraders.crypto@gmail.com' },
+        { name: 'Viduranga Tharaka', email: 'vidurangatharakafx@gmail.com' },
+        { name: 'Tharusha Sachin', email: 'tharushajayathissa924@gmail.com' },
+        { name: 'Roshan Kulathunga', email: 'roshankulathunga34@gmail.com' },
+        { name: 'Nalin Chandika', email: 'nalinsilva73@gmail.com' },
+        { name: 'M I Hashim', email: 'mohashmaark16@gmail.com' },
+        { name: 'Yohan Madushanka', email: 'kmym95m@gmail.com' },
+        { name: 'Nadeesha Yasasmi', email: 'kavideshan2001@gmail.com' },
+        { name: 'IFLAAL', email: 'mhdiflaal2005@gmail.com' },
+        { name: 'W. Prasad Fernando', email: 'Airdog.omega@gmail.com' },
+        { name: 'Pasindu Ashan', email: 'pasinduashan15@gmail.com' },
+        { name: 'Hasitha Madushan', email: 'hasitha1234nokzcrew@gmail.com' },
+        { name: 'Himansa', email: 'himansaviboda849@gmail.com' },
+        { name: 'Nadeeshan Ranathunga', email: 'nadeeshanranathunga@gmail.com' },
+        { name: 'Dinesh Punchihewa', email: 'ppriyankara446@gmail.com' },
+        { name: 'Sampath Wickramarathna', email: 'sampathwick1988@gmail.com' },
+        { name: 'Sahan Vimantha Fernando', email: 'Sahanvf943@gmail.com' },
+        { name: 'Vihanga Ravihara Senevirathna Delvita Bandara', email: 'vihangasenevirathnaop@gmail.com' },
+        { name: 'Yehan Nethkalum', email: 'yehanevos@gmail.com' },
+        { name: 'Dinuka Bandara', email: 'dinukadwc@gmail.com' },
+        { name: 'Gangasara Pahansith', email: 'gangasarapahansith@gmail.com' },
+        { name: 'Ishan', email: 'ishanmalindhaims@gmail.com' },
+        { name: 'Prasad', email: 'prasadweerasinghe607@gmail.com' },
+        { name: 'Pahansith Herath', email: 'pahansithherath@gmail.com' }
+    ];
+
+    const commonPassword = btoa('oUiTjyjE#GB#ment');
+
+    const storedUsers = users.map(user => ({
+        email: btoa(user.email),
+        password: commonPassword,
+        name: user.name
+    }));
+
+    localStorage.setItem("users", JSON.stringify(storedUsers));
+    populateUserTable();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    addUserDataManually();
     populateUserTable();
     document.getElementById("remove-users").addEventListener("click", removeSelectedUsers);
 });
