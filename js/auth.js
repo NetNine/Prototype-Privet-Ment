@@ -131,12 +131,39 @@ function populateUserTable() {
     });
 }
 
+function updateUserData(users) {
+    localStorage.setItem('users', JSON.stringify(users));
+    loadUserData();
+}
+
+function addUser(email, password) {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    users.push({ email: encrypt(email), password: encrypt(password) });
+    updateUserData(users);
+}
+
 function removeUser(index) {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const users = JSON.parse(localStorage.getItem('users')) || [];
     users.splice(index, 1);
-    localStorage.setItem("users", JSON.stringify(users));
+    updateUserData(users);
+}
+
+function loadUserData() {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    console.log('User data loaded:', users);
     populateUserTable();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadUserData();
+    document.getElementById("remove-users").addEventListener("click", removeSelectedUsers);
+});
+
+document.addEventListener('storage', (event) => {
+    if (event.key === 'users') {
+        loadUserData();
+    }
+});
 
 function removeSelectedUsers() {
     const users = JSON.parse(localStorage.getItem("users")) || [];
@@ -149,48 +176,7 @@ function removeSelectedUsers() {
         }
     });
 
-    localStorage.setItem("users", JSON.stringify(users));
-    populateUserTable();
-}
-
-function addUser() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    if (!email || !password) {
-        alert("Email and password are required!");
-        return;
-    }
-
-    const user = {
-        email: btoa(email),
-        password: btoa(password),
-        name: email.split('@')[0] // Example: use part of email as name
-    };
-
-    users.push(user);
-    localStorage.setItem("users", JSON.stringify(users));
-    populateUserTable();
-    alert("User added successfully!");
-}
-
-function loginUser() {
-    const email = document.getElementById("login-email").value;
-    const password = document.getElementById("login-password").value;
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    const encryptedEmail = btoa(email);
-    const encryptedPassword = btoa(password);
-
-    const user = users.find(u => u.email === encryptedEmail && u.password === encryptedPassword);
-
-    if (user) {
-        alert("Login successful!");
-        // Redirect to appropriate page
-    } else {
-        alert("Invalid credentials!");
-    }
+    updateUserData(users);
 }
 
 function addUserDataManually() {
@@ -235,23 +221,24 @@ function addUserDataManually() {
         name: user.name
     }));
 
-    localStorage.setItem("users", JSON.stringify(storedUsers));
+    updateUserData(storedUsers);
     populateUserTable();
 }
 
-function loadUserData() {
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    console.log('User data loaded:', users);
-    populateUserTable();
-}
+function loginUser() {
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadUserData();
-    document.getElementById("remove-users").addEventListener("click", removeSelectedUsers);
-});
+    const encryptedEmail = btoa(email);
+    const encryptedPassword = btoa(password);
 
-document.addEventListener('storage', (event) => {
-    if (event.key === 'users') {
-        loadUserData();
+    const user = users.find(u => u.email === encryptedEmail && u.password === encryptedPassword);
+
+    if (user) {
+        alert("Login successful!");
+        // Redirect to appropriate page
+    } else {
+        alert("Invalid credentials!");
     }
-});
+}
