@@ -133,6 +133,7 @@
                 <h2>Member Login</h2>
                 <div id="errorMessage" class="error-message"></div>
                 <form id="loginForm" novalidate>
+                    <!-- Input field for email -->
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" 
@@ -142,6 +143,7 @@
                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                                placeholder="Enter your email address">
                     </div>
+                    <!-- Input field for password -->
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" 
@@ -151,6 +153,7 @@
                                minlength="8"
                                placeholder="Enter your password">
                     </div>
+                    <!-- Submit button for login -->
                     <button type="submit" class="submit-btn">Login</button>
                 </form>
             </div>
@@ -170,48 +173,7 @@
         <p>&copy; 2024 Trading Mentorship. All rights reserved.</p>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"></script>
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js";
-    
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAQKqhvjYopzGCcsCXQfdQqabjFGThnaCg",
-            authDomain: "prototype-privet-ment.firebaseapp.com",
-            projectId: "prototype-privet-ment",
-            storageBucket: "prototype-privet-ment.firebasestorage.app",
-            messagingSenderId: "484800808348",
-            appId: "1:484800808348:web:112dcca093ea1dde5e7459",
-            measurementId: "G-RMX9E72SQX"
-        };
-    
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-    
-        // Handle login form submission
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-    
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Signed in 
-                    const user = userCredential.user;
-                    console.log('User signed in:', user);
-                    // Redirect or perform any other actions
-                })
-                .catch((error) => {
-                    const errorMessage = error.message;
-                    document.getElementById('errorMessage').innerText = errorMessage;
-                    document.getElementById('errorMessage').style.display = 'block';
-                });
-        });
-    </script>
-
+    <!-- Import the auth.js module -->
+    <script type="module" src="js/auth.js"></script>
 </body>
 </html>
