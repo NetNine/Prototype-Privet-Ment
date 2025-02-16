@@ -5,13 +5,14 @@ import { getAuth, signInWithEmailAndPassword, signOut }
 
 // Firebase configuration (Replace with your Firebase config)
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
+    apiKey: "AIzaSyBUUbgNtZEa-IwPgHEkG7sFebKpwoazfZ4",
+    authDomain: "prototype-privet-ment-ac201.firebaseapp.com",
+    projectId: "prototype-privet-ment-ac201",
+    storageBucket: "prototype-privet-ment-ac201.firebasestorage.app",
+    messagingSenderId: "723271453521",
+    appId: "1:723271453521:web:aa8a05f0d9285189c1e170",
+    measurementId: "G-VVWXRMZTFQ"
+  };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
