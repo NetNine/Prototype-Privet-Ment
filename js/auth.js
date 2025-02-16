@@ -1,65 +1,54 @@
-// Import Firebase authentication module
+// Import Firebase authentication modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js";
+import { getAuth, signInWithEmailAndPassword, signOut } 
+    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Firebase configuration (Replace with your Firebase config)
 const firebaseConfig = {
-  apiKey: "AIzaSyAQKqhvjYopzGCcsCXQfdQqabjFGThnaCg",
-  authDomain: "prototype-privet-ment.firebaseapp.com",
-  projectId: "prototype-privet-ment",
-  storageBucket: "prototype-privet-ment.firebasestorage.app",
-  messagingSenderId: "484800808348",
-  appId: "1:484800808348:web:112dcca093ea1dde5e7459",
-  measurementId: "G-RMX9E72SQX"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-// Firebase sign-in
+const auth = getAuth(app);
+
+// Function to log in user
 function signInUser(email, password) {
-    const errorMessage = document.getElementById("errorMessage"); // Get the error message element
+    const errorMessage = document.getElementById("errorMessage");
 
     signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log("User logged in:", user);
+        .then((userCredential) => {
+            const user = userCredential.user;
+            console.log("User logged in:", user.email);
 
-        // Write user data to the Realtime Database
-        set(ref(db, 'users/' + user.uid), {
-            email: user.email,
-            userId: user.uid
-        }).then(() => {
-            console.log('User data saved to database.');
-        }).catch((error) => {
-            console.error('Error saving user data to database:', error);
+            // Store session in localStorage
+            localStorage.setItem('user', JSON.stringify({ email: user.email, userId: user.uid }));
+            localStorage.setItem('isLoggedIn', 'true');
+
+            // Redirect to content page
+            window.location.href = 'content.html';
+        })
+        .catch((error) => {
+            console.error("Login error:", error.code, error.message);
+            errorMessage.textContent = "Invalid Email or Password. Try again.";
+            errorMessage.style.display = 'block';
         });
-         const userSession = { email: email, name: 'User', loginTime: new Date().toISOString()};
-
-        // Redirect to content page
-        window.location.href = 'content.html';
-    })
-    .catch((error) => {
-        const errorCode = error.code;
-        const errorMessageText = error.message;
-        console.error("Login error:", errorCode, errorMessageText);
-        errorMessage.textContent = 'Invalid Credentials!' ;
-        errorMessage.style.display = 'block';
-
-    });
 }
 
-// Logout function
-function logout() {
-    localStorage.removeItem('user');
-    localStorage.removeItem('isLoggedIn');
-    window.location.href = 'login.html';
-}
-
-
-
+// Add event listener for login
+document.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.getElementById("loginForm");
+    if (loginForm) {
+        loginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            signInUser(email, password);
+        });
+    }
+});

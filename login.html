@@ -5,112 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Trading Mentorship</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .login-form {
-            max-width: 400px;
-            margin: 4rem auto;
-            padding: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.8rem;
-            border: var(--glass-border);
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 10px var(--primary-color);
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 1rem;
-            background: var(--primary-color);
-            color: black;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px var(--primary-color);
-        }
-
-        .error-message {
-            color: #ff4444;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 4px;
-            background-color: rgba(255, 68, 68, 0.1);
-            display: none;
-        }
-
-        .premium-content {
-            background: var(--glass-color);
-            border-radius: 10px;
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .premium-content h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-        }
-        
-        .premium-content p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-        
-        .cta-button {
-            margin: 1.5rem 0;
-        }
-        
-        .buy-now-link {
-            display: inline-block;
-            background: var(--secondary-color);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background 0.3s ease;
-        }
-        
-        .buy-now-link:hover {
-            background: var(--primary-color);
-        }
-        
-        .note {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
-        
-    </style>
 </head>
 <body>
     <div class="glass-container">
@@ -119,52 +13,32 @@
                 <img src="images/logo.jpg" alt="Logo">
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
-                <li><a href="content.html"><i class="fas fa-play-circle"></i> Content Library</a></li>
-                <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
-                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-                <li><a href="login.html" class="auth-btn login-btn active"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="content.html">Content Library</a></li>
+                <li><a href="resources.html">Resources</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html" class="auth-btn login-btn active">Login</a></li>
             </ul>
         </nav>
 
         <main class="content-area">
             <div class="login-form glass-card">
                 <h2>Member Login</h2>
-                <div id="errorMessage" class="error-message"></div>
+                <div id="errorMessage" class="error-message" style="display:none;"></div>
                 <form id="loginForm" novalidate>
-                    <!-- Input field for email -->
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" 
-                               id="email" 
-                               name="email" 
-                               required 
-                               pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                               placeholder="Enter your email address">
+                        <input type="email" id="email" required placeholder="Enter your email">
                     </div>
-                    <!-- Input field for password -->
+
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" 
-                               id="password" 
-                               name="password" 
-                               required 
-                               minlength="8"
-                               placeholder="Enter your password">
+                        <input type="password" id="password" required minlength="8" placeholder="Enter your password">
                     </div>
-                    <!-- Submit button for login -->
+
                     <button type="submit" class="submit-btn">Login</button>
                 </form>
-            </div>
-
-            <div class="premium-content">
-                <h3>Access Premium Content</h3>
-                <p>Unlock exclusive trading insights and mentorship by purchasing our premium content package.</p>
-                <div class="cta-button">
-                    <a href="contact.html" class="buy-now-link">Buy Mentorship</a>
-                </div>
-                <p class="note">Note: Gain immediate access to advanced strategies and expert guidance.</p>
             </div>
         </main>
     </div>
@@ -173,7 +47,7 @@
         <p>&copy; 2024 Trading Mentorship. All rights reserved.</p>
     </footer>
 
-    <!-- Import the auth.js module -->
+    <!-- Import Firebase Auth -->
     <script type="module" src="js/auth.js"></script>
 </body>
 </html>
