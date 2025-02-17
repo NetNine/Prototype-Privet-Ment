@@ -5,6 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Trading Mentorship</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .login-form {
+            max-width: 400px;
+            margin: 4rem auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .login-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: var(--glass-border);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .submit-btn, .google-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .google-btn {
+            background: #ffffff;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .google-btn i {
+            margin-right: 8px;
+        }
+
+        .submit-btn:hover, .google-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+
+        .error-message {
+            color: #ff4444;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: rgba(255, 68, 68, 0.1);
+            display: none;
+        }
+
+        .email-login-form {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none; /* Hidden by default */
+        }
+
+        .logout-btn:hover {
+            background: #ff6666;
+        }
+    </style>
 </head>
 <body>
     <div class="glass-container">
@@ -13,32 +115,50 @@
                 <img src="images/logo.jpg" alt="Logo">
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="content.html">Content Library</a></li>
-                <li><a href="resources.html">Resources</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="login.html" class="auth-btn login-btn active">Login</a></li>
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="content.html"><i class="fas fa-play-circle"></i> Content Library</a></li>
+                <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="login.html" class="auth-btn login-btn active"><i class="fas fa-sign-in-alt"></i> Login</a></li>
             </ul>
         </nav>
 
         <main class="content-area">
             <div class="login-form glass-card">
                 <h2>Member Login</h2>
-                <div id="errorMessage" class="error-message" style="display:none;"></div>
-                <form id="loginForm" novalidate>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" required placeholder="Enter your email">
-                    </div>
+                <div id="errorMessage" class="error-message"></div>
+                <div class="login-btns">
+                    <!-- ✅ Google Login Button -->
+                    <button type="button" id="googleLoginBtn" class="google-btn">
+                        <i class="fab fa-google"></i> Login with Google
+                    </button>
 
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" required minlength="8" placeholder="Enter your password">
-                    </div>
+                    <!-- ✅ Email Login Button -->
+                    <button type="button" id="emailLoginBtn" class="submit-btn">
+                        <i class="fas fa-envelope"></i> Login with Email
+                    </button>
+                </div>
 
-                    <button type="submit" class="submit-btn">Login</button>
-                </form>
+                <!-- ✅ Hidden Email Login Form (Appears when clicked) -->
+                <div id="emailLoginForm" class="email-login-form">
+                    <form id="loginForm" novalidate>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required placeholder="Enter your email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" required minlength="8" placeholder="Enter your password">
+                        </div>
+
+                        <button type="submit" class="submit-btn">Login</button>
+                    </form>
+                </div>
+
+                <!-- ✅ Logout Button (Hidden by default) -->
+                <button type="button" id="logoutBtn" class="logout-btn">Logout</button>
             </div>
         </main>
     </div>
@@ -47,7 +167,40 @@
         <p>&copy; 2024 Trading Mentorship. All rights reserved.</p>
     </footer>
 
-    <!-- Import Firebase Auth -->
+    <!-- ✅ Import Firebase Auth -->
     <script type="module" src="js/auth.js"></script>
+    <script>
+        // Show Email Login Form when clicked
+        document.getElementById("emailLoginBtn").addEventListener("click", () => {
+            document.getElementById("emailLoginForm").style.display = "block";
+        });
+
+        // Show logout button if user is logged in
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            document.getElementById("logoutBtn").style.display = "block";
+            document.getElementById("googleLoginBtn").style.display = "none";
+            document.getElementById("emailLoginBtn").style.display = "none";
+        }
+
+        // Prevent back navigation to content page after logout
+        if (performance.navigation.type === 2) {
+            window.location.href = 'login.html';
+        }
+        // Handle logout button click
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            // Perform logout operation here (e.g., Firebase sign out)
+            // firebase.auth().signOut().then(() => {
+            //     // Sign-out successful.
+            //     window.location.href = 'login.html';
+            // }).catch((error) => {
+            //     // An error happened.
+            //     console.error("Logout error:", error);
+            // });
+
+            // For now, just redirect to login page
+            window.location.href = 'login.html';
+        });
+    </script>
 </body>
 </html>

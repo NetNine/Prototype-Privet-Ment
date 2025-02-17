@@ -278,6 +278,11 @@ document.addEventListener('DOMContentLoaded', () => {
             navigateVideo(1);
         }
     });
+
+    // Prevent back navigation to content page after logout
+    if (performance.navigation.type === 2) {
+        window.location.href = 'login.html';
+    }
 });
 
 function isAuthenticated() {

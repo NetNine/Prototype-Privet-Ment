@@ -137,6 +137,8 @@
             cursor: not-allowed;
         }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
 </head>
 <body>
     <div class="glass-container">
@@ -203,5 +205,11 @@
     <script src="js/auth.js"></script>
     <script src="js/navigation.js"></script>
     <script src="js/content.js"></script>
+    <script>
+        // Prevent back navigation to content page after logout
+        if (performance.navigation.type === 2) {
+            window.location.href = 'login.html';
+        }
+    </script>
 </body>
 </html>

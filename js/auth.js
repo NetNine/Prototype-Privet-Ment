@@ -1,9 +1,9 @@
-// Import Firebase authentication modules
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js";
-import { getAuth, signInWithEmailAndPassword, signOut } 
-    from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js";
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } 
+    from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 
-// Firebase configuration (Replace with your Firebase config)
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyBUUbgNtZEa-IwPgHEkG7sFebKpwoazfZ4",
     authDomain: "prototype-privet-ment-ac201.firebaseapp.com",
@@ -12,44 +12,85 @@ const firebaseConfig = {
     messagingSenderId: "723271453521",
     appId: "1:723271453521:web:aa8a05f0d9285189c1e170",
     measurementId: "G-VVWXRMZTFQ"
-  };
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-// Function to log in user
-function signInUser(email, password) {
-    const errorMessage = document.getElementById("errorMessage");
-
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            console.log("User logged in:", user.email);
-
-            // Store session in localStorage
-            localStorage.setItem('user', JSON.stringify({ email: user.email, userId: user.uid }));
-            localStorage.setItem('isLoggedIn', 'true');
-
-            // Redirect to content page
-            window.location.href = 'content.html';
+// Function to handle login with Google
+function signInWithGoogle() {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            const user = result.user;
+            localStorage.setItem('user', JSON.stringify({
+                email: user.email, 
+                userId: user.uid, 
+                displayName: user.displayName
+            }));
+            window.location.href = 'content.html'; // Redirect to content page
         })
         .catch((error) => {
-            console.error("Login error:", error.code, error.message);
-            errorMessage.textContent = "Invalid Email or Password. Try again.";
-            errorMessage.style.display = 'block';
+            console.error("Google Login error:", error.message);
+            alert("Google login failed!");
         });
 }
 
-// Add event listener for login
-document.addEventListener("DOMContentLoaded", () => {
-    const loginForm = document.getElementById("loginForm");
-    if (loginForm) {
-        loginForm.addEventListener("submit", function (event) {
-            event.preventDefault();
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            signInUser(email, password);
+// Function to log in with email & password
+function signInUser(email, password) {
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            localStorage.setItem('user', JSON.stringify({
+                email: user.email, 
+                userId: user.uid, 
+                displayName: user.displayName
+            }));
+            window.location.href = 'content.html'; // Redirect to content page
+        })
+        .catch((error) => {
+            console.error("Login error:", error.message);
+            alert("Invalid Email or Password!");
         });
+}
+
+// Function to handle logout
+function logoutUser() {
+    signOut(auth)
+        .then(() => {
+            localStorage.removeItem('user');
+            updateNavigation();
+            window.location.href = 'login.html'; // Redirect to login page
+        })
+        .catch((error) => {
+            console.error("Logout error:", error.message);
+            alert("Logout failed!");
+        });
+}
+
+// Function to check authentication state
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        localStorage.setItem('user', JSON.stringify({
+            email: user.email, 
+            userId: user.uid, 
+            displayName: user.displayName
+        }));
+    } else {
+        localStorage.removeItem('user');
     }
+    updateNavigation();
+});
+
+// Event Listeners
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("googleLoginBtn")?.addEventListener("click", signInWithGoogle);
+    document.getElementById("loginForm")?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        signInUser(email, password);
+    });
+    document.getElementById("logoutBtn")?.addEventListener("click", logoutUser);
 });
