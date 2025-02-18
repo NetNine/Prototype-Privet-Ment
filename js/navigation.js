@@ -5,11 +5,9 @@ function updateNavigation() {
 
     if (!navList) return;
 
-    // Remove existing auth button
-    const existingAuthButton = navList.querySelector('.auth-btn');
-    if (existingAuthButton) {
-        existingAuthButton.remove();
-    }
+    // Remove duplicate auth button
+    const existingAuthButtons = navList.querySelectorAll('.auth-btn');
+    existingAuthButtons.forEach(button => button.remove());
 
     // Create authentication button
     const authItem = document.createElement('li');
@@ -25,12 +23,14 @@ function updateNavigation() {
             </div>
         `;
     } else {
-        // User is logged out - Show login button
-        authItem.innerHTML = `
-            <a href="login.html" class="auth-btn login-btn">
-                <i class="fas fa-sign-in-alt"></i> Login
-            </a>
-        `;
+        // Only show login button on `content.html`
+        if (window.location.pathname.includes("content.html")) {
+            authItem.innerHTML = `
+                <a href="login.html" class="auth-btn login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+            `;
+        }
     }
 
     navList.appendChild(authItem);
@@ -58,8 +58,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-// Redirect to login page if user is not logged in
-if (!localStorage.getItem('user') && window.location.pathname !== "/login.html") {
-    window.location.href = 'login.html';
-}
