@@ -1,13 +1,13 @@
 // Function to update the navigation bar dynamically
 function updateNavigation() {
     const user = JSON.parse(localStorage.getItem('user'));
-    const navList = document.querySelector('.glass-nav ul');
+    const navList = document.querySelector('.nav-menu');
 
     if (!navList) return;
 
-    // Remove duplicate auth button
+    // Remove existing auth buttons to avoid duplicates
     const existingAuthButtons = navList.querySelectorAll('.auth-btn');
-    existingAuthButtons.forEach(button => button.remove());
+    existingAuthButtons.forEach(btn => btn.remove());
 
     // Create authentication button
     const authItem = document.createElement('li');
@@ -23,38 +23,31 @@ function updateNavigation() {
             </div>
         `;
     } else {
-        // Only show login button on `content.html`
-        if (window.location.pathname.includes("content.html")) {
-            authItem.innerHTML = `
-                <a href="login.html" class="auth-btn login-btn">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </a>
-            `;
-        }
+        // User is logged out - Show login button
+        authItem.innerHTML = `
+            <a href="login.html" class="auth-btn login-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+        `;
     }
 
     navList.appendChild(authItem);
 }
 
-// Mobile menu toggle functionality
-document.addEventListener('DOMContentLoaded', () => {
+// Function to log out the user and redirect to the login page
+function logoutUser() {
+    localStorage.removeItem('user');
     updateNavigation();
+    window.location.href = 'login.html'; // Redirect to login page after logout
+}
 
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navMenu = document.querySelector('.nav-menu');
-
-    if (mobileMenuBtn && navMenu) {
-        mobileMenuBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            mobileMenuBtn.classList.toggle('active');
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                navMenu.classList.remove('active');
-                mobileMenuBtn.classList.remove('active');
-            }
-        });
+// Restrict access to `content.html`
+if (window.location.pathname.includes("content.html")) {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+        window.location.href = 'login.html'; // Redirect to login if not logged in
     }
-});
+}
+
+// Run navigation update on page load
+document.addEventListener('DOMContentLoaded', updateNavigation);
