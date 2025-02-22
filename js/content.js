@@ -250,12 +250,20 @@ function playVideo() {
     const playlist = playlists[currentPlaylist];
     const video = playlist[currentVideoIndex];
     
-    const player = document.getElementById('videoPlayer');
+    const videoContainer = document.getElementById('videoContainer');
     const title = document.getElementById('currentVideoTitle');
     const description = document.getElementById('currentVideoDescription');
     
-    if (player && video) {
-        player.src = `https://www.youtube.com/embed/${video.id}`;
+    if (videoContainer && video) {
+        let iframe = document.createElement('iframe');
+        iframe.setAttribute('src', `https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1`);
+        iframe.setAttribute('allow', 'encrypted-media; picture-in-picture');
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allowfullscreen', true);
+
+        videoContainer.innerHTML = '';
+        videoContainer.appendChild(iframe);
+        
         title.textContent = video.title;
         description.textContent = video.description;
     }
@@ -263,6 +271,33 @@ function playVideo() {
     updateNavigationButtons();
     updateVideoListHighlight();
 }
+
+// Security enhancements
+navigator.mediaDevices.getDisplayMedia = function() {
+    alert("Screen recording is disabled for security reasons.");
+    return Promise.reject(new Error("Screen recording blocked."));
+};
+
+document.addEventListener("visibilitychange", function() {
+    const videoContainer = document.getElementById("videoContainer");
+    if (document.hidden) {
+        videoContainer.style.filter = "blur(10px)";
+    } else {
+        videoContainer.style.filter = "none";
+    }
+});
+
+// Prevent right-click
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// Prevent keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && 
+        (e.key === 'p' || e.key === 's' || e.key === 'u' || 
+         e.key === 'c' || e.key === 'i')) {
+        e.preventDefault();
+    }
+});
 
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevVideo');

@@ -84,6 +84,7 @@
             padding-bottom: 56.25%;
             height: 0;
             margin-bottom: 1rem;
+            transition: filter 0.3s ease;
         }
 
         .video-wrapper iframe {
@@ -139,6 +140,15 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+
+        /* Security enhancements */
+        html {
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
@@ -183,7 +193,7 @@
                 <div class="main-content">
                     <div class="video-container">
                         <div class="video-wrapper">
-                            <iframe id="videoPlayer" allowfullscreen></iframe>
+                            <div id="videoContainer"></div>
                         </div>
                         <div class="video-info">
                             <h2 class="video-title" id="currentVideoTitle"></h2>
