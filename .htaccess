@@ -1,9 +1,16 @@
 RewriteEngine On
-RewriteCond %{HTTP_USER_AGENT} ^.*IDMan.*$ [NC]
+
+# Block IDM and other download managers
+RewriteCond %{HTTP_USER_AGENT} IDM|Internet\ Download\ Manager|FDM|Free\ Download\ Manager|GetRight|GetGo|Go!Zilla|Download\ Demon|Download\ Wonder|Flash\ Get|Mass\ Downloader|NetAnts [NC]
 RewriteRule .* - [F,L]
 
-# Additional security headers
+# Block requests without user agent
+RewriteCond %{HTTP_USER_AGENT} ^-?$
+RewriteRule .* - [F,L]
+
+# Security headers
 Header set X-Frame-Options "SAMEORIGIN"
 Header set X-Content-Type-Options "nosniff"
 Header set X-XSS-Protection "1; mode=block"
-Header set Content-Security-Policy "frame-ancestors 'self'"
+Header set Content-Security-Policy "default-src 'self' https://www.youtube.com https://www.googleapis.com; frame-src 'self' blob: https://www.youtube.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.googleapis.com; style-src 'self' 'unsafe-inline';"
+Header set Permissions-Policy "display-capture=(), screen-wake-lock=(), sync-xhr=(), accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
