@@ -119,6 +119,31 @@ const coreContent = [
         id: 'e1W9ILdnFtY',
         title: 'Seasonality',
         description: 'Trading with seasonal patterns and cycles.'
+    },
+    {
+        id: 'r4g471Hd_0k',
+        title: 'IPDA Data Range',
+        description: 'Understanding and utilizing IPDA data ranges in trading.'
+    },
+    {
+        id: '-Hu_wpZknm4',
+        title: 'Liquidity Sweep and What is the Entry Model',
+        description: 'Understanding liquidity sweeps and identifying entry models in trading.'
+    },
+    {
+        id: 'b25Bp91gFoY',
+        title: 'INTERNAL VS EXTERNAL',
+        description: 'Understanding internal and external market structures.'
+    },
+    {
+        id: 'B9P4hgn-WG0',
+        title: 'ACCUMILATIONS',
+        description: 'Understanding accumulation phases in trading.'
+    },
+    {
+        id: 'hSRWH2pPzlY',
+        title: 'Market Structure Shift',
+        description: 'Identifying and understanding shifts in market structure.'
     }
 ];
 
