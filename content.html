@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="images/icon.png">
-    
+    <link rel="stylesheet" href="css/mobile.css">
     <style>
         .content-container {
             display: flex;
@@ -171,19 +171,36 @@
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script>
+        // Mobile detection function
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+    </script>
 </head>
 <body>
     <div class="glass-container">
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+        <nav class="mobile-menu" id="mobileMenu">
+            <ul class="mobile-menu-items">
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="content.html" class="active"><i class="fas fa-play-circle"></i> Content Library</a></li>
+                <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+            </ul>
+        </nav>
+
+        <!-- Desktop Navigation -->
         <nav class="glass-nav">
             <div class="logo">
                 <img src="images/logo.jpg" alt="Logo">
-            </div>
-            <div class="mobile-links">
-                <a href="index.html"><i class="fas fa-home"></i></a>
-                <a href="about.html"><i class="fas fa-info-circle"></i></a>
-                <a href="content.html" class="active"><i class="fas fa-play-circle"></i></a>
-                <a href="resources.html"><i class="fas fa-book"></i></a>
-                <a href="contact.html"><i class="fas fa-envelope"></i></a>
             </div>
             <ul class="nav-menu">
                 <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
@@ -213,6 +230,9 @@
                     <div class="video-container glass-card">
                         <div class="video-wrapper">
                             <div id="videoContainer" class="responsive-iframe"></div>
+                            <div id="mobileNotice" style="display: none;">
+                                <p>Tap to watch this video in the YouTube app</p>
+                            </div>
                         </div>
                         <div class="video-info">
                             <h2 class="video-title" id="currentVideoTitle"></h2>
@@ -236,10 +256,59 @@
     <script src="js/navigation.js"></script>
     <script src="./js/content.js"></script>
     <script>
-        // Prevent back navigation to content page after logout
+        // Combined mobile-related scripts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile detection and handling
+            if (isMobile()) {
+                handleMobileVideoClicks();
+                adjustMobileLayout();
+            }
+
+            // Mobile menu setup
+            setupMobileMenu();
+        });
+
+        function handleMobileVideoClicks() {
+            document.querySelectorAll('.video-list-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const videoId = this.getAttribute('data-video-id');
+                    window.location.href = `youtube://watch?v=${videoId}`;
+                    setTimeout(() => {
+                        window.location.href = `https://www.youtube.com/watch?v=${videoId}`;
+                    }, 2500);
+                });
+            });
+            document.getElementById('mobileNotice').style.display = 'block';
+        }
+
+        function adjustMobileLayout() {
+            document.querySelector('.content-container').style.flexDirection = 'column';
+            document.querySelector('.sidebar').style.width = '100%';
+            document.querySelector('.video-container').style.position = 'relative';
+        }
+
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+            function toggleMobileMenu() {
+                mobileMenu.classList.toggle('active');
+                mobileMenuOverlay.classList.toggle('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            }
+
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
+        }
+
+        // Prevent back navigation after logout
         if (performance.navigation.type === 2) {
             window.location.href = 'login.html';
         }
     </script>
 </body>
 </html>
+
