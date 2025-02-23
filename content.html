@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Content Library - GHOST OF THE MECHANISM®[ GOLDBATCH TRADERS</title>
-    <link rel="stylesheet" href="css/style.css">
+    <base href="/Prototype-Privet-Ment/">
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="images/icon.png">
@@ -209,9 +210,9 @@
                 </aside>
 
                 <div class="main-content">
-                    <div class="video-container">
+                    <div class="video-container glass-card">
                         <div class="video-wrapper">
-                            <div id="videoContainer"></div>
+                            <div id="videoContainer" class="responsive-iframe"></div>
                         </div>
                         <div class="video-info">
                             <h2 class="video-title" id="currentVideoTitle"></h2>
@@ -230,9 +231,10 @@
             </div>
         </main>
     </div>
-    <script src="js/auth.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="./js/auth.js"></script>
     <script src="js/navigation.js"></script>
-    <script src="js/content.js"></script>
+    <script src="./js/content.js"></script>
     <script>
         // Prevent back navigation to content page after logout
         if (performance.navigation.type === 2) {

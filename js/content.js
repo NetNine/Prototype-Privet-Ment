@@ -249,115 +249,55 @@ function playVideo() {
 
     const playlist = playlists[currentPlaylist];
     const video = playlist[currentVideoIndex];
-
     const videoContainer = document.getElementById('videoContainer');
-    const title = document.getElementById('currentVideoTitle');
-    const description = document.getElementById('currentVideoDescription');
-
+    
     if (videoContainer && video) {
-        videoContainer.innerHTML = `<div id="ytPlayer"></div>`;
+        // Create a secure iframe
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('src', `https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0`);
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
 
-        // Load YouTube API if not already loaded
-        if (!window.YT) {
-            let tag = document.createElement("script");
-            tag.src = "https://www.youtube.com/iframe_api";
-            let firstScriptTag = document.getElementsByTagName("script")[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        }
+        // Clear and append
+        videoContainer.innerHTML = '';
+        videoContainer.appendChild(iframe);
 
-        // Initialize player when API is ready
-        window.onYouTubeIframeAPIReady = function() {
-            new YT.Player("ytPlayer", {
-                videoId: video.id,
-                playerVars: {
-                    autoplay: 1,
-                    controls: 1,
-                    modestbranding: 1,
-                    rel: 0,
-                    showinfo: 0,
-                    disablekb: 0
-                },
-                events: {
-                    onReady: function(event) {
-                        event.target.playVideo();
-                    }
-                }
-            });
-        };
-
-        title.textContent = video.title;
-        description.textContent = video.description;
+        // Update info
+        document.getElementById('currentVideoTitle').textContent = video.title;
+        document.getElementById('currentVideoDescription').textContent = video.description;
     }
 
     updateNavigationButtons();
     updateVideoListHighlight();
 }
 
-// Enhanced security measures
-const securityMeasures = {
-    init() {
-        this.preventScreenCapture();
-        this.preventDevTools();
-        this.preventContextMenu();
-        this.preventKeyboardShortcuts();
-        this.handleVisibilityChange();
-        this.preventExternalRecording();
-    },
-
-    preventScreenCapture() {
-        navigator.mediaDevices.getDisplayMedia = function() {
-            alert("Screen recording is disabled for security reasons.");
-            return Promise.reject(new Error("Screen recording blocked."));
-        };
-    },
-
-    preventExternalRecording() {
-        setInterval(() => {
-            if (window.outerHeight - window.innerHeight > 160 || 
-                window.outerWidth - window.innerWidth > 160) {
-                document.body.style.display = 'none';
-                alert("Recording tools are not allowed.");
-                location.reload();
-            }
-        }, 1000);
-    },
-
-    preventDevTools() {
-        setInterval(() => {
-            const widthThreshold = window.outerWidth - window.innerWidth > 160;
-            const heightThreshold = window.outerHeight - window.innerHeight > 160;
-            if (widthThreshold || heightThreshold) {
-                document.documentElement.style.display = 'none';
-                alert('Developer tools are not allowed.');
-                location.reload();
-            }
-        }, 1000);
-    },
-
-    preventContextMenu() {
-        document.addEventListener('contextmenu', e => e.preventDefault());
-    },
-
-    preventKeyboardShortcuts() {
-        document.addEventListener('keydown', e => {
-            if ((e.ctrlKey || e.metaKey) && 
-                ['s', 'u', 'p', 'c', 'i'].includes(e.key.toLowerCase())) {
-                e.preventDefault();
-            }
-        });
-    },
-
-    handleVisibilityChange() {
-        document.addEventListener("visibilitychange", () => {
-            const videoContainer = document.getElementById("videoContainer");
-            if (document.hidden) {
-                videoContainer.style.filter = "blur(10px)";
-            } else {
-                videoContainer.style.filter = "none";
-            }
-        });
-    }
+// Security enhancements
+navigator.mediaDevices.getDisplayMedia = function() {
+    alert("Screen recording is disabled for security reasons.");
+    return Promise.reject(new Error("Screen recording blocked."));
 };
+
+document.addEventListener("visibilitychange", function() {
+    const videoContainer = document.getElementById("videoContainer");
+    if (document.hidden) {
+        videoContainer.style.filter = "blur(10px)";
+    } else {
+        videoContainer.style.filter = "none";
+    }
+});
+
+// Prevent right-click
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// Prevent keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && 
+        (e.key === 'p' || e.key === 's' || e.key === 'u' || 
+         e.key === 'c' || e.key === 'i')) {
+        e.preventDefault();
+    }
+});
 
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevVideo');
@@ -403,9 +343,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (performance.navigation.type === 2) {
         window.location.href = 'login.html';
     }
-
-    // Initialize security measures
-    securityMeasures.init();
 });
 
 function isAuthenticated() {

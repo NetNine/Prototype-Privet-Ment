@@ -1297,3 +1297,21 @@ body {
 .login-page button:hover, .admin-page button:hover {
     background-color: #4cae4c;
 }
+
+/* Responsive Iframe */
+.responsive-iframe {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+}
+
+.responsive-iframe iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+}
