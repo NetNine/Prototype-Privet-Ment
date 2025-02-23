@@ -4,22 +4,34 @@
         <div class="logo">
             <img src="./images/logo.jpg" alt="Logo">
         </div>
+        
         <ul class="nav-links">
-            <li><a href="./index.html" data-page="home"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="./about.html" data-page="about"><i class="fas fa-info-circle"></i> About</a></li>
-            <li><a href="./content.html" data-page="content"><i class="fas fa-play-circle"></i> Content</a></li>
-            <li><a href="./resources.html" data-page="resources"><i class="fas fa-book"></i> Resources</a></li>
-            <li><a href="./contact.html" data-page="contact"><i class="fas fa-envelope"></i> Contact</a></li>
+            <li><a href="./index.html" data-page="home">
+                <i class="fas fa-home"></i> Home
+            </a></li>
+            <li><a href="./about.html" data-page="about">
+                <i class="fas fa-info-circle"></i> About
+            </a></li>
+            <li><a href="./content.html" data-page="content">
+                <i class="fas fa-play-circle"></i> Content
+            </a></li>
+            <li><a href="./resources.html" data-page="resources">
+                <i class="fas fa-book"></i> Resources
+            </a></li>
+            <li><a href="./contact.html" data-page="contact">
+                <i class="fas fa-envelope"></i> Contact
+            </a></li>
         </ul>
-        <button id="logoutBtn" class="logout-btn desktop-logout">
+        
+        <button id="logoutBtn" class="logout-btn">
             <i class="fas fa-sign-out-alt"></i> Logout
         </button>
     </nav>
 
     <!-- Mobile Navigation -->
-    <div class="mobile-nav">
+    <nav class="mobile-nav">
         <!-- Bottom Navigation Bar -->
-        <nav class="bottom-nav">
+        <div class="bottom-nav">
             <a href="./index.html" class="nav-btn" data-page="home">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
@@ -36,43 +48,10 @@
                 <i class="fas fa-book"></i>
                 <span>Resources</span>
             </a>
-            <button class="nav-btn menu-btn" id="mobileMenuBtn">
+            <button class="nav-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
                 <span>Menu</span>
             </button>
-        </nav>
-
-        <!-- Side Menu -->
-        <div class="mobile-menu" id="mobileMenu">
-            <div class="menu-header">
-                <img src="./images/logo.jpg" alt="Logo" class="mobile-logo">
-                <button class="close-btn" id="closeMenu">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <nav class="side-menu">
-                <!-- Menu Items -->
-                <div class="menu-items">
-                    <a href="./index.html" class="menu-link"><i class="fas fa-home"></i> Home</a>
-                    <a href="./about.html" class="menu-link"><i class="fas fa-info-circle"></i> About</a>
-                    <a href="./content.html" class="menu-link"><i class="fas fa-play-circle"></i> Content</a>
-                    <a href="./resources.html" class="menu-link"><i class="fas fa-book"></i> Resources</a>
-                    <a href="./contact.html" class="menu-link"><i class="fas fa-envelope"></i> Contact</a>
-                </div>
-                <!-- Action Buttons -->
-                <div class="menu-actions">
-                    <button id="mobileLogoutBtn" class="action-btn logout-btn">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                    <a href="https://wa.me/+94760683126" class="action-btn whatsapp-btn">
-                        <i class="fab fa-whatsapp"></i> Contact Support
-                    </a>
-                </div>
-            </nav>
         </div>
-        
-        <!-- Backdrop -->
-        <div class="mobile-backdrop" id="mobileBackdrop"></div>
-    </div>
+    </nav>
 </header>
