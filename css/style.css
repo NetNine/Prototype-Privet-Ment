@@ -8,6 +8,9 @@
     --glass-border: 1px solid rgba(255, 255, 255, 0.1);
     --text-color: #FFFFFF;
     --text-secondary: rgba(255, 255, 255, 0.7);
+    --featured-color: rgba(0, 255, 169, 0.15);
+    --featured-border: 1px solid rgba(0, 255, 169, 0.3);
+    --featured-badge-color: rgba(0, 255, 169, 0.8);
 }
 
 /* Reset & Base Styles */
@@ -33,6 +36,12 @@ body {
 }
 
 /* Container Styles */
+.container {
+    background: radial-gradient(circle at center, rgba(0, 255, 169, 0.1) 0%, transparent 70%);
+    min-height: 100vh;
+    position: relative;
+}
+
 .glass-container {
     min-height: 100vh;
     backdrop-filter: blur(10px);
@@ -169,4 +178,121 @@ body {
 /* Prevent scroll when mobile menu is open */
 body.menu-open {
     overflow: hidden;
+}
+
+/* Update Login Button Styles */
+.login-btn {
+    background: var(--secondary-color) !important;
+    color: white;
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: inherit;
+}
+
+.login-btn:hover,
+.login-btn.active {
+    background: var(--primary-color) !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px currentColor;
+}
+
+/* Update Resource Card Styles */
+.resource-card {
+    background: var(--card-bg);
+    border: var(--glass-border);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.resource-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary-color);
+}
+
+/* Featured Resource Card Styles */
+.featured-resource-card {
+    background: var(--featured-color);
+    border: var(--featured-border);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.featured-resource-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary-color);
+}
+
+/* About Page Styles */
+.about-card {
+    background: rgba(15, 15, 15, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 25px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.about-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../images/bg-pattern.png');
+    background-size: cover;
+    opacity: 0.1;
+    z-index: -1;
+}
+
+/* Mission Card */
+.mission-card {
+    background: rgba(15, 15, 15, 0.8);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 255, 169, 0.1);
+    border-radius: 20px;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Services Section */
+.services-section {
+    background: rgba(15, 15, 15, 0.8);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Media Queries */
+@media screen and (max-width: 1024px) {
+    /* ...existing media query code... */
+}
+
+@media screen and (max-width: 768px) {
+    /* ...existing media query code... */
+}
+
+@media screen and (max-width: 480px) {
+    /* ...existing media query code... */
 }
