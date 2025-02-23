@@ -224,3 +224,95 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavigation(isMobile);
     initMobileNavigation();
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeNavigation();
+});
+
+function initializeNavigation() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Set active states
+    setActiveNavItems(currentPage);
+    
+    // Setup mobile menu
+    setupMobileMenu();
+    
+    // Handle authentication
+    setupAuthHandlers();
+}
+
+function setActiveNavItems(currentPage) {
+    const pageId = currentPage.replace('.html', '');
+    
+    // Set active class for all navigation items
+    document.querySelectorAll('[data-page]').forEach(item => {
+        if (item.getAttribute('data-page') === pageId) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+
+function setupMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const closeMenuBtn = document.getElementById('closeMenu');
+    const mobileBackdrop = document.getElementById('mobileBackdrop');
+    const mobileMenu = document.querySelector('.mobile-menu');
+
+    // Toggle menu
+    function toggleMenu(show) {
+        document.body.classList.toggle('menu-open', show);
+        mobileMenu?.classList.toggle('active', show);
+        mobileBackdrop?.classList.toggle('active', show);
+    }
+
+    // Event listeners
+    mobileMenuBtn?.addEventListener('click', () => toggleMenu(true));
+    closeMenuBtn?.addEventListener('click', () => toggleMenu(false));
+    mobileBackdrop?.addEventListener('click', () => toggleMenu(false));
+
+    // Handle swipe gestures
+    let touchStartX = 0;
+    
+    document.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+    });
+
+    document.addEventListener('touchmove', e => {
+        if (!mobileMenu?.classList.contains('active')) return;
+        
+        const touchX = e.touches[0].clientX;
+        const diff = touchStartX - touchX;
+        
+        if (diff > 50) {
+            toggleMenu(false);
+        }
+    });
+}
+
+function setupAuthHandlers() {
+    const logoutBtns = document.querySelectorAll('.logout-btn');
+    
+    logoutBtns.forEach(btn => {
+        btn.addEventListener('click', handleLogout);
+    });
+
+    // Check protected pages
+    const protectedPages = ['content.html', 'resources.html'];
+    const currentPage = window.location.pathname.split('/').pop();
+    
+    if (protectedPages.includes(currentPage) && !isAuthenticated()) {
+        window.location.href = './login.html';
+    }
+}
+
+function handleLogout() {
+    localStorage.removeItem('user');
+    window.location.href = './login.html';
+}
+
+function isAuthenticated() {
+    return !!localStorage.getItem('user');
+}

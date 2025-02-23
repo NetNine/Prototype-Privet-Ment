@@ -14,45 +14,10 @@
     <link rel="icon" type="image/png" href="./images/icon.png">
 </head>
 <body class="no-scroll-on-menu">
-    <!-- Desktop Navigation -->
-    <nav class="desktop-nav">
-        <div class="nav-container">
-            <div class="logo">
-                <img src="./images/logo.jpg" alt="Logo">
-            </div>
-            <ul class="nav-menu">
-                <li><a href="./index.html"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="./about.html"><i class="fas fa-info-circle"></i> About</a></li>
-                <li><a href="./content.html" class="active"><i class="fas fa-play-circle"></i> Content</a></li>
-                <li><a href="./resources.html"><i class="fas fa-book"></i> Resources</a></li>
-                <li><a href="./contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-            </ul>
-            <button class="logout-btn" id="desktopLogoutBtn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
-    </nav>
-
-    <!-- Mobile Navigation -->
-    <div class="mobile-nav">
-        <button class="mobile-menu-btn" id="mobileMenuBtn">
-            <i class="fas fa-bars"></i>
-        </button>
-        
-        <!-- Mobile Slide Menu -->
-        <div class="mobile-backdrop" id="mobileBackdrop"></div>
-        <nav class="mobile-menu" id="mobileMenu">
-            <!-- ...existing mobile menu content... -->
-        </nav>
-
-        <!-- Mobile Bottom Navigation -->
-        <nav class="bottom-nav" id="bottomNav">
-            <!-- ...existing bottom nav content... -->
-        </nav>
-    </div>
-
+    <!-- Include base navigation -->
     <div id="navigationContainer"></div>
-    
+
+    <!-- Content specific to this page -->
     <main class="content-area desktop-wrapper">
         <div class="glass-card">
             <h1>Premium Content Library</h1>
@@ -95,7 +60,25 @@
         </div>
     </main>
 
-    <!-- Scripts -->
+    <script>
+        // Load base navigation
+        fetch('./layouts/base.html')
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Extract navigation
+                const nav = doc.querySelector('.desktop-nav');
+                const mobileNav = doc.querySelector('.mobile-nav');
+                
+                document.getElementById('navigationContainer').appendChild(nav);
+                document.getElementById('navigationContainer').appendChild(mobileNav);
+                
+                // Initialize navigation
+                initializeNavigation();
+            });
+    </script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="./js/auth.js"></script>
     <script src="./js/navigation.js"></script>
