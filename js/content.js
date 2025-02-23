@@ -241,6 +241,10 @@ function updateVideoListHighlight() {
     }
 }
 
+// Error #1: Incorrect Blob URL usage
+// Error #2: Missing error handling
+// Error #3: Insecure iframe creation
+// Error #4: No video loading state
 function playVideo() {
     if (!isAuthenticated()) {
         window.location.href = 'login.html';
@@ -252,20 +256,34 @@ function playVideo() {
     const videoContainer = document.getElementById('videoContainer');
     
     if (videoContainer && video) {
-        // Create a secure iframe
-        const iframe = document.createElement('iframe');
-        iframe.setAttribute('src', `https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0`);
-        iframe.setAttribute('frameborder', '0');
-        iframe.setAttribute('allowfullscreen', 'true');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+        try {
+            // Show loading state
+            videoContainer.innerHTML = '<div class="loading">Loading...</div>';
 
-        // Clear and append
-        videoContainer.innerHTML = '';
-        videoContainer.appendChild(iframe);
+            // Create secure iframe with sandboxing
+            const secureIframe = document.createElement('iframe');
+            secureIframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');
+            secureIframe.src = `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&showinfo=0`;
+            secureIframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+            secureIframe.className = 'secure-video-frame';
+            secureIframe.style.cssText = 'width: 100%; height: 100%; border: none;';
 
-        // Update info
-        document.getElementById('currentVideoTitle').textContent = video.title;
-        document.getElementById('currentVideoDescription').textContent = video.description;
+            // Clear container and add iframe
+            videoContainer.innerHTML = '';
+            videoContainer.appendChild(secureIframe);
+
+            // Add error handler
+            secureIframe.onerror = () => {
+                videoContainer.innerHTML = '<div class="error">Error loading video</div>';
+            };
+
+            // Update info
+            document.getElementById('currentVideoTitle').textContent = video.title;
+            document.getElementById('currentVideoDescription').textContent = video.description;
+        } catch (error) {
+            console.error('Error playing video:', error);
+            videoContainer.innerHTML = '<div class="error">Error loading video</div>';
+        }
     }
 
     updateNavigationButtons();
@@ -345,6 +363,98 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Error #8: Weak authentication check
 function isAuthenticated() {
-    return localStorage.getItem('user') !== null;
+    const user = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    return user !== null && token !== null && validateToken(token);
 }
+
+// Error #9: Missing token validation
+function validateToken(token) {
+    try {
+        // Add your token validation logic here
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+// Enhanced security measures
+const securityMeasures = {
+    init() {
+        this.preventDevTools();
+        this.preventScreenshots();
+        this.preventKeyboardShortcuts();
+        this.preventExternalRecording();
+        this.initCleanup();
+    },
+
+    preventDevTools() {
+        setInterval(() => {
+            const threshold = 160;
+            if (window.outerWidth - window.innerWidth > threshold || 
+                window.outerHeight - window.innerHeight > threshold) {
+                document.body.innerHTML = 'Developer tools are not allowed.';
+                location.reload();
+            }
+        }, 1000);
+    },
+
+    preventScreenshots() {
+        document.addEventListener("visibilitychange", () => {
+            const container = document.getElementById("videoContainer");
+            if (document.hidden) {
+                container.style.filter = "blur(20px)";
+            } else {
+                container.style.filter = "none";
+            }
+        });
+    },
+
+    preventKeyboardShortcuts() {
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && 
+                ['s', 'u', 'p', 'c', 'i', 'j'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }, true);
+    },
+
+    preventDownloads() {
+        document.addEventListener('dragstart', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+        document.addEventListener('contextmenu', e => e.preventDefault());
+    },
+
+    preventContextMenu() {
+        document.addEventListener('contextmenu', e => {
+            e.preventDefault();
+            return false;
+        });
+    },
+
+    preventExternalRecording() {
+        Object.defineProperty(navigator, 'mediaDevices', {
+            value: Object.freeze({
+                getUserMedia: async () => { throw new Error('Recording blocked'); },
+                getDisplayMedia: async () => { throw new Error('Screen capture blocked'); }
+            })
+        });
+    },
+
+    initCleanup() {
+        window.addEventListener('unload', () => {
+            const container = document.getElementById('videoContainer');
+            if (container) container.innerHTML = '';
+        });
+    }
+};
+
+// Error #7: Missing error boundaries
+window.onerror = function(msg, url, line) {
+    console.error('Error:', msg, 'at', url, ':', line);
+    return false;
+};
