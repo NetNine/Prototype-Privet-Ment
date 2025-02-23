@@ -201,6 +201,36 @@
         opacity: 1;
         visibility: visible;
     }
+
+    .auth-container {
+        display: none;
+    }
+
+    .mobile-nav {
+        display: block;
+    }
+
+    /* Remove duplicate logout buttons */
+    .mobile-menu .logout-btn,
+    .mobile-logout {
+        display: none !important;
+    }
+}
+
+/* Auth Container Styles */
+.auth-container {
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.mobile-auth {
+    background: #ff4d4d !important;
+    color: white !important;
+}
+
+.mobile-auth:hover {
+    background: #cc0000 !important;
 }
 
 @supports not (backdrop-filter: blur(10px)) {

@@ -14,8 +14,39 @@
     <link rel="icon" type="image/png" href="./images/icon.png">
 </head>
 <body class="no-scroll-on-menu">
-    <!-- Include base navigation -->
-    <div id="navigationContainer"></div>
+    <!-- Standard Navigation -->
+    <nav class="glass-nav">
+        <div class="logo">
+            <img src="./images/logo.jpg" alt="Logo">
+        </div>
+        <ul class="nav-menu">
+            <li><a href="./index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="./about.html"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="./content.html" class="active"><i class="fas fa-play-circle"></i> Content</a></li>
+            <li><a href="./resources.html"><i class="fas fa-book"></i> Resources</a></li>
+            <li><a href="./contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+        </ul>
+        <!-- Single Logout Button -->
+        <div class="auth-container">
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation with Integrated Auth -->
+    <div class="mobile-nav">
+        <div class="mobile-links">
+            <a href="./index.html"><i class="fas fa-home"></i></a>
+            <a href="./about.html"><i class="fas fa-info-circle"></i></a>
+            <a href="./content.html" class="active"><i class="fas fa-play-circle"></i></a>
+            <a href="./resources.html"><i class="fas fa-book"></i></a>
+            <a href="./contact.html"><i class="fas fa-envelope"></i></a>
+            <a href="javascript:void(0)" class="mobile-auth" id="mobileLogoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+    </div>
 
     <!-- Content specific to this page -->
     <main class="content-area desktop-wrapper">
@@ -60,25 +91,6 @@
         </div>
     </main>
 
-    <script>
-        // Load base navigation
-        fetch('./layouts/base.html')
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // Extract navigation
-                const nav = doc.querySelector('.desktop-nav');
-                const mobileNav = doc.querySelector('.mobile-nav');
-                
-                document.getElementById('navigationContainer').appendChild(nav);
-                document.getElementById('navigationContainer').appendChild(mobileNav);
-                
-                // Initialize navigation
-                initializeNavigation();
-            });
-    </script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="./js/auth.js"></script>
     <script src="./js/navigation.js"></script>

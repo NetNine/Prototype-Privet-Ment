@@ -88,10 +88,20 @@ function setupDesktopNavigation() {
 }
 
 function setupLogoutHandlers() {
-    const logoutBtns = document.querySelectorAll('.logout-btn');
-    logoutBtns.forEach(btn => {
-        btn.addEventListener('click', handleLogout);
-    });
+    // Get both desktop and mobile logout buttons
+    const logoutBtn = document.getElementById('logoutBtn');
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+    // Single handler function
+    const handleLogout = (e) => {
+        e.preventDefault();
+        localStorage.removeItem('user');
+        window.location.href = './login.html';
+    };
+
+    // Attach to both buttons
+    logoutBtn?.addEventListener('click', handleLogout);
+    mobileLogoutBtn?.addEventListener('click', handleLogout);
 }
 
 function setupMobileMenu() {

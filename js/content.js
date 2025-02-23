@@ -323,6 +323,28 @@ function navigateVideo(direction) {
 }
 
 // Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize standard navigation
+    initializeNavigation();
+    
+    // Content page specific code
+    setupVideoPlayer();
+    loadVideoList();
+});
+
+function initializeNavigation() {
+    // Set active menu item
+    const menuItems = document.querySelectorAll('.nav-menu a, .mobile-links a');
+    menuItems.forEach(item => {
+        if (item.getAttribute('href').includes('content.html')) {
+            item.classList.add('active');
+        }
+    });
+
+    // Setup auth state
+    updateAuthState();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     createVideoList();
     playVideo(); // Play first video
