@@ -326,8 +326,6 @@ body {
     transition: transform 0.3s ease;
     width: 100%;
     max-width: 100%;
-    opacity: 1 !important; /* Ensure visibility */
-    pointer-events: auto !important; /* Enable interaction */
 }
 
 .glass-card:hover {
@@ -344,8 +342,6 @@ body {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
-    opacity: 1 !important;
-    pointer-events: auto !important;
 }
 
 .featured-resource-card .icon {
@@ -410,8 +406,6 @@ body {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
-    opacity: 1 !important; /* Ensure visibility */
-    pointer-events: auto !important; /* Enable interaction */
 }
 
 .resource-card:hover {
@@ -1334,14 +1328,4 @@ body.no-scroll-on-menu.menu-open {
     border-color: var(--primary-color);
     box-shadow: 0 0 15px rgba(0, 255, 169, 0.1);
     outline: none;
-}
-
-/* Remove Premium Badges */
-.premium-badge {
-    display: none !important;
-}
-
-/* Update Resource Links */
-.resource-link {
-    background: rgba(0, 255, 169, 0.1) !important; /* Use standard styling */
 }
