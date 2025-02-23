@@ -167,10 +167,20 @@
     </style>
 </head>
 <body>
+    <nav class="glass-nav">
+        <div id="headerContainer"></div>
+    </nav>
+    <script src="./js/header.js"></script>
+    <script>
+        fetch('./components/header.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('headerContainer').innerHTML = html;
+                initHeader();
+            });
+    </script>
+    
     <div class="glass-container">
-        <nav class="glass-nav">
-            <div id="headerContainer"></div>
-        </nav>
 
         <main class="content-area">
             <div class="login-form glass-card">
@@ -255,15 +265,6 @@
             // For now, just redirect to login page
             window.location.href = 'login.html';
         });
-    </script>
-    <script src="./js/header.js"></script>
-    <script>
-        fetch('./components/header.html')
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('headerContainer').innerHTML = html;
-                initHeader();
-            });
     </script>
 </body>
 </html>

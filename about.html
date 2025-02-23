@@ -169,13 +169,20 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
 </head>
 <body>
+    <nav class="glass-nav">
+        <div id="headerContainer"></div>
+    </nav>
+    <script src="./js/header.js"></script>
+    <script>
+        fetch('./components/header.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('headerContainer').innerHTML = html;
+                initHeader();
+            });
+    </script>
+    
     <div class="glass-container">
-        <header>
-            <nav class="glass-nav">
-                <div id="headerContainer"></div>
-            </nav>
-        </header>
-
         <main class="content-area">
             <div class="about-card" style="text-align: center;">
                 <h1 style="font-size: 2.5rem; margin-bottom: 1.5rem;">About <span class="highlight">GHOST OF THE MECHANISM®[ GOLDBATCH TRADERS</span></h1>
@@ -215,13 +222,5 @@
         </main>
     </div>
     <script src="./js/header.js"></script>
-    <script>
-        fetch('./components/header.html')
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('headerContainer').innerHTML = html;
-                initHeader();
-            });
-    </script>
 </body>
 </html>
