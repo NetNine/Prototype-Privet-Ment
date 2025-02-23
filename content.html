@@ -236,6 +236,13 @@
     <script src="js/navigation.js"></script>
     <script src="./js/content.js"></script>
     <script>
+        // Ensure the user is authenticated before loading the content
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!isAuthenticated()) {
+                window.location.href = 'login.html';
+            }
+        });
+
         // Prevent back navigation to content page after logout
         if (performance.navigation.type === 2) {
             window.location.href = 'login.html';
