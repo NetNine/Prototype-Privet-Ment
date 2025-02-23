@@ -6,309 +6,63 @@
     <title>Content Library - GHOST OF THE MECHANISM®[ GOLDBATCH TRADERS</title>
     <base href="/Prototype-Privet-Ment/">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/navigation.css">
+    <link rel="stylesheet" href="./css/content.css">
+    <link rel="stylesheet" href="./css/mobile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="images/icon.png">
-    <link rel="stylesheet" href="css/mobile.css">
-    <style>
-        .content-container {
-            display: flex;
-            gap: 2rem;
-            padding: 2rem 0;
-            position: relative;
-        }
-
-        .sidebar {
-            width: 300px;
-            flex-shrink: 0;
-            max-height: calc(100vh - 200px);
-            overflow-y: auto;
-            padding-right: 1rem;
-            position: sticky;
-            top: 2rem;
-            scroll-behavior: smooth;
-        }
-
-        .video-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            scroll-behavior: smooth;
-        }
-
-        .video-list-item {
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid transparent;
-        }
-
-        .video-list-item:hover {
-            transform: translateX(10px);
-            background: rgba(255, 255, 255, 0.2);
-            border-color: var(--primary-color);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-        }
-
-        .video-list-item.active {
-            background: var(--primary-color);
-            color: black;
-            transform: translateX(10px);
-            box-shadow: 0 0 20px var(--primary-color);
-        }
-
-        .video-list-item.active {
-            background: var(--primary-color);
-            color: black;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            position: relative;
-        }
-
-        .video-container {
-            position: sticky;
-            top: 2rem;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 2rem;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            margin-bottom: 1rem;
-            transition: filter 0.3s ease;
-        }
-
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-            border: none;
-        }
-
-        #videoContainer {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            overflow: hidden;
-        }
-
-        #videoContainer iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 8px;
-        }
-
-        .video-info {
-            margin-top: 1rem;
-        }
-
-        .video-title {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .module-title {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            -webkit-text-fill-color: transparent;
-            margin: 2rem 0 1rem;
-        }
-
-        .navigation-arrows {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
-        }
-
-        .nav-arrow {
-            padding: 0.5rem 1rem;
-            background: var(--glass-color);
-            border: var(--glass-border);
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .nav-arrow:hover {
-            background: var(--primary-color);
-            transform: scale(1.1);
-        }
-
-        .nav-arrow:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Security enhancements */
-        html {
-            -webkit-user-select: none;
-            -webkit-touch-callout: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-    </style>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script>
-        // Mobile detection function
-        function isMobile() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-    </script>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" href="./images/icon.png">
 </head>
-<body>
-    <div class="glass-container">
-        <!-- Mobile Menu Button -->
-        <button class="mobile-menu-btn" id="mobileMenuBtn">
-            <i class="fas fa-bars"></i>
-        </button>
+<body class="no-scroll-on-menu">
+    <div id="navigationContainer"></div>
+    
+    <main class="content-area">
+        <div class="glass-card">
+            <h1>Premium Content Library</h1>
+            <p>Welcome to your exclusive trading education content.</p>
+        </div>
 
-        <!-- Mobile Menu -->
-        <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-        <nav class="mobile-menu" id="mobileMenu">
-            <ul class="mobile-menu-items">
-                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
-                <li><a href="content.html" class="active"><i class="fas fa-play-circle"></i> Content Library</a></li>
-                <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
-                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-            </ul>
-        </nav>
+        <div class="content-container">
+            <!-- Sidebar -->
+            <aside class="sidebar glass-card">
+                <h2 class="module-title">Core Content</h2>
+                <ul class="video-list" id="coreContentList"></ul>
 
-        <!-- Desktop Navigation -->
-        <nav class="glass-nav">
-            <div class="logo">
-                <img src="images/logo.jpg" alt="Logo">
-            </div>
-            <ul class="nav-menu">
-                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
-                <li><a href="content.html" class="active"><i class="fas fa-play-circle"></i> Content Library</a></li>
-                <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
-                <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-            </ul>
-        </nav>
+                <h2 class="module-title">Goldbach Content</h2>
+                <ul class="video-list" id="goldbachList"></ul>
+            </aside>
 
-        <main class="content-area">
-            <div class="glass-card">
-                <h1>Premium Content Library</h1>
-                <p>Welcome to your exclusive trading education content. Navigate through the lessons using the menu or arrow keys.</p>
-            </div>
-
-            <div class="content-container">
-                <aside class="sidebar glass-card">
-                    <h2 class="module-title">Core Content</h2>
-                    <ul class="video-list" id="coreContentList"></ul>
-
-                    <h2 class="module-title">Goldbach Content</h2>
-                    <ul class="video-list" id="goldbachList"></ul>
-                </aside>
-
-                <div class="main-content">
-                    <div class="video-container glass-card">
-                        <div class="video-wrapper">
-                            <div id="videoContainer" class="responsive-iframe"></div>
-                            <div id="mobileNotice" style="display: none;">
-                                <p>Tap to watch this video in the YouTube app</p>
-                            </div>
+            <!-- Main Content -->
+            <div class="main-content">
+                <div class="video-container glass-card">
+                    <div class="video-wrapper">
+                        <div id="videoContainer" class="responsive-iframe"></div>
+                        <div id="mobileNotice" style="display: none;">
+                            <p>Tap to watch this video in the YouTube app</p>
                         </div>
-                        <div class="video-info">
-                            <h2 class="video-title" id="currentVideoTitle"></h2>
-                            <p id="currentVideoDescription"></p>
-                        </div>
-                        <div class="navigation-arrows">
-                            <button class="nav-arrow" id="prevVideo">
-                                <i class="fas fa-arrow-left"></i> Previous
-                            </button>
-                            <button class="nav-arrow" id="nextVideo">
-                                Next <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h2 class="video-title" id="currentVideoTitle"></h2>
+                        <p id="currentVideoDescription"></p>
+                    </div>
+                    <div class="navigation-arrows">
+                        <button class="nav-arrow" id="prevVideo">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button class="nav-arrow" id="nextVideo">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="./js/auth.js"></script>
-    <script src="js/navigation.js"></script>
+    <script src="./js/navigation.js"></script>
     <script src="./js/content.js"></script>
-    <script>
-        // Combined mobile-related scripts
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile detection and handling
-            if (isMobile()) {
-                handleMobileVideoClicks();
-                adjustMobileLayout();
-            }
-
-            // Mobile menu setup
-            setupMobileMenu();
-        });
-
-        function handleMobileVideoClicks() {
-            document.querySelectorAll('.video-list-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const videoId = this.getAttribute('data-video-id');
-                    window.location.href = `youtube://watch?v=${videoId}`;
-                    setTimeout(() => {
-                        window.location.href = `https://www.youtube.com/watch?v=${videoId}`;
-                    }, 2500);
-                });
-            });
-            document.getElementById('mobileNotice').style.display = 'block';
-        }
-
-        function adjustMobileLayout() {
-            document.querySelector('.content-container').style.flexDirection = 'column';
-            document.querySelector('.sidebar').style.width = '100%';
-            document.querySelector('.video-container').style.position = 'relative';
-        }
-
-        function setupMobileMenu() {
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenu = document.getElementById('mobileMenu');
-            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-
-            function toggleMobileMenu() {
-                mobileMenu.classList.toggle('active');
-                mobileMenuOverlay.classList.toggle('active');
-                const icon = mobileMenuBtn.querySelector('i');
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
-            }
-
-            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-            mobileMenuOverlay.addEventListener('click', toggleMobileMenu);
-        }
-
-        // Prevent back navigation after logout
-        if (performance.navigation.type === 2) {
-            window.location.href = 'login.html';
-        }
-    </script>
 </body>
 </html>
 

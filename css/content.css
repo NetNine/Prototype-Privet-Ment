@@ -1,0 +1,135 @@
+.content-area {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.content-container {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    position: relative;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 2rem;
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.video-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.video-list-item {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid transparent;
+}
+
+.video-list-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--primary-color);
+}
+
+.video-list-item.active {
+    background: var(--primary-color);
+    color: black;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    min-width: 0; /* Prevents flex item from overflowing */
+}
+
+.video-container {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.video-info {
+    padding: 1.5rem;
+}
+
+.video-title {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.navigation-arrows {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.nav-arrow {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--glass-color);
+    border: var(--glass-border);
+    color: white;
+}
+
+.nav-arrow:hover {
+    background: var(--primary-color);
+    color: black;
+}
+
+/* Mobile Optimizations */
+@media screen and (max-width: 768px) {
+    .content-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+        position: relative;
+        top: 0;
+    }
+
+    .video-container {
+        margin-bottom: 60px; /* Space for bottom navigation */
+    }
+
+    .navigation-arrows {
+        position: fixed;
+        bottom: 70px;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        z-index: 100;
+    }
+}
