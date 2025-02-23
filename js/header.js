@@ -24,25 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Load header dynamically on all pages
-    document.addEventListener("DOMContentLoaded", function () {
-        fetch("components/header.html")
-            .then(response => response.text())
-            .then(data => {
-                document.body.insertAdjacentHTML("afterbegin", data);
-                setTimeout(() => {
-                    const links = document.querySelectorAll(".nav-link");
-                    const currentPath = window.location.pathname.split("/").pop();
-    
-                    links.forEach(link => {
-                        if (link.getAttribute("href") === currentPath) {
-                            link.classList.add("active-nav");
-                        }
-                    });
-                }, 100); // Delay to ensure elements are loaded
-            });
-    });
-    
     // Event Listeners
     hamburgerBtn?.addEventListener('click', () => toggleMenu(true));
     closeMenuBtn?.addEventListener('click', () => toggleMenu(false));
@@ -86,35 +67,20 @@ document.addEventListener('DOMContentLoaded', function() {
         return page;
     }
 
-    // Enhanced active menu handling
+    // Set active menu item with GitHub Pages support
     function setActiveMenuItem() {
-        const path = window.location.pathname;
-        const currentPage = path.replace('/Prototype-Privet-Ment/', '').split('/').pop() || 'index.html';
-        
-        // Select all navigation links in both desktop and mobile menus
-        const menuLinks = document.querySelectorAll('.nav-links a, .menu-item');
+        const currentPage = getActivePage();
+        const menuLinks = document.querySelectorAll('.menu-item, .nav-links a');
         
         menuLinks.forEach(link => {
             const href = link.getAttribute('href');
-            const linkPage = href.split('/').pop();
-            
-            // Compare just the filenames
-            if (linkPage === currentPage) {
+            if (href.includes(currentPage)) {
                 link.classList.add('active');
-                // Also add active to parent li if exists
-                const parentLi = link.closest('li');
-                if (parentLi) parentLi.classList.add('active');
             } else {
                 link.classList.remove('active');
-                const parentLi = link.closest('li');
-                if (parentLi) parentLi.classList.remove('active');
             }
         });
     }
-
-    // Call setActiveMenuItem immediately and on page changes
-    setActiveMenuItem();
-    window.addEventListener('popstate', setActiveMenuItem);
 
     // Update navigation for GitHub Pages
     function updateNavigation() {
@@ -128,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Check if current page is protected
     function isProtectedPage() {
-        const protectedPages = ['content.html'];
+        const protectedPages = ['content.html',];
         return protectedPages.includes(getActivePage());
     }
 

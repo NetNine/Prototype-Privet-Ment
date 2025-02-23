@@ -65,29 +65,6 @@
     font-size: 1rem;
 }
 
-/* Enhanced Active Link Styles */
-.nav-links a.active,
-.menu-item.active {
-    background: var(--primary-color);
-    color: black;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 255, 169, 0.3);
-}
-
-.nav-links li.active a {
-    font-weight: 500;
-}
-
-/* Mobile Menu Active States */
-.mobile-menu .menu-item.active {
-    background: var(--primary-color);
-    color: black;
-}
-
-.mobile-menu .menu-item.active i {
-    color: black;
-}
-
 /* Logout Button - Compact */
 .logout-btn {
     padding: 0.5rem 1rem;
