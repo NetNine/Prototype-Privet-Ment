@@ -11,46 +11,68 @@
             <li><a href="./resources.html" data-page="resources"><i class="fas fa-book"></i> Resources</a></li>
             <li><a href="./contact.html" data-page="contact"><i class="fas fa-envelope"></i> Contact</a></li>
         </ul>
-        <div class="auth-button">
-            <button id="logoutBtn" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
+        <button id="logoutBtn" class="logout-btn desktop-logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
     </nav>
 
     <!-- Mobile Navigation -->
     <div class="mobile-nav">
-        <button class="menu-toggle" id="menuToggle">
-            <span></span><span></span><span></span>
-        </button>
-        
-        <!-- Mobile Menu Overlay -->
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <a href="./index.html" class="nav-btn" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="./about.html" class="nav-btn" data-page="about">
+                <i class="fas fa-info-circle"></i>
+                <span>About</span>
+            </a>
+            <a href="./content.html" class="nav-btn" data-page="content">
+                <i class="fas fa-play-circle"></i>
+                <span>Content</span>
+            </a>
+            <a href="./resources.html" class="nav-btn" data-page="resources">
+                <i class="fas fa-book"></i>
+                <span>Resources</span>
+            </a>
+            <button class="nav-btn menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
+        </nav>
+
+        <!-- Side Menu -->
         <div class="mobile-menu" id="mobileMenu">
             <div class="menu-header">
                 <img src="./images/logo.jpg" alt="Logo" class="mobile-logo">
-                <button class="close-menu" id="closeMenu">
+                <button class="close-btn" id="closeMenu">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <nav class="mobile-menu-links">
-                <a href="./index.html"><i class="fas fa-home"></i> Home</a>
-                <a href="./about.html"><i class="fas fa-info-circle"></i> About</a>
-                <a href="./content.html"><i class="fas fa-play-circle"></i> Content</a>
-                <a href="./resources.html"><i class="fas fa-book"></i> Resources</a>
-                <a href="./contact.html"><i class="fas fa-envelope"></i> Contact</a>
-                <button class="mobile-logout-btn" id="mobileLogoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
+            
+            <nav class="side-menu">
+                <!-- Menu Items -->
+                <div class="menu-items">
+                    <a href="./index.html" class="menu-link"><i class="fas fa-home"></i> Home</a>
+                    <a href="./about.html" class="menu-link"><i class="fas fa-info-circle"></i> About</a>
+                    <a href="./content.html" class="menu-link"><i class="fas fa-play-circle"></i> Content</a>
+                    <a href="./resources.html" class="menu-link"><i class="fas fa-book"></i> Resources</a>
+                    <a href="./contact.html" class="menu-link"><i class="fas fa-envelope"></i> Contact</a>
+                </div>
+                <!-- Action Buttons -->
+                <div class="menu-actions">
+                    <button id="mobileLogoutBtn" class="action-btn logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                    <a href="https://wa.me/+94760683126" class="action-btn whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i> Contact Support
+                    </a>
+                </div>
             </nav>
         </div>
         
-        <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
-            <a href="./index.html"><i class="fas fa-home"></i></a>
-            <a href="./about.html"><i class="fas fa-info-circle"></i></a>
-            <a href="./content.html"><i class="fas fa-play-circle"></i></a>
-            <a href="./resources.html"><i class="fas fa-book"></i></a>
-            <button id="bottomMenuBtn"><i class="fas fa-bars"></i></button>
-        </nav>
+        <!-- Backdrop -->
+        <div class="mobile-backdrop" id="mobileBackdrop"></div>
     </div>
 </header>
