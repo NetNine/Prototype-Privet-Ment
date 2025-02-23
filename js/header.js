@@ -1,43 +1,50 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const menuTrigger = document.getElementById('menuTrigger');
-    const sideMenu = document.getElementById('sideMenu');
-    const closeMenu = document.getElementById('closeMenu');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const slideMenu = document.getElementById('slideMenu');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
     const menuBackdrop = document.getElementById('menuBackdrop');
-    const logoutBtns = document.querySelectorAll('.logout-btn');
+    const menuItems = document.querySelectorAll('.menu-item');
 
     // Toggle menu function
-    function toggleMenu() {
-        menuTrigger.classList.toggle('active');
-        sideMenu.classList.toggle('active');
-        menuBackdrop.classList.toggle('active');
-        document.body.classList.toggle('menu-open');
+    function toggleMenu(show = true) {
+        hamburgerBtn.classList.toggle('active', show);
+        slideMenu.classList.toggle('active', show);
+        menuBackdrop.classList.toggle('active', show);
+        document.body.classList.toggle('menu-open', show);
     }
 
     // Event listeners
-    menuTrigger?.addEventListener('click', toggleMenu);
-    closeMenu?.addEventListener('click', toggleMenu);
-    menuBackdrop?.addEventListener('click', toggleMenu);
+    hamburgerBtn?.addEventListener('click', () => toggleMenu(true));
+    closeMenuBtn?.addEventListener('click', () => toggleMenu(false));
+    menuBackdrop?.addEventListener('click', () => toggleMenu(false));
 
     // Close menu when clicking menu items
-    document.querySelectorAll('.menu-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            toggleMenu();
-        });
+    menuItems.forEach(item => {
+        item.addEventListener('click', () => toggleMenu(false));
     });
 
-    // Handle logout
-    logoutBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            localStorage.removeItem('user');
-            window.location.href = './login.html';
-        });
-    });
-
-    // Set active states
+    // Set active menu item
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('[data-page]').forEach(link => {
-        if (link.getAttribute('data-page') === currentPage.replace('.html', '')) {
-            link.classList.add('active');
+    menuItems.forEach(item => {
+        if (item.getAttribute('href').includes(currentPage)) {
+            item.classList.add('active');
+        }
+    });
+
+    // Handle swipe to close
+    let touchStartX = 0;
+    slideMenu?.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+    });
+
+    slideMenu?.addEventListener('touchmove', e => {
+        if (!slideMenu.classList.contains('active')) return;
+        
+        const touchX = e.touches[0].clientX;
+        const diff = touchStartX - touchX;
+        
+        if (diff < -50) {
+            toggleMenu(false);
         }
     });
 });

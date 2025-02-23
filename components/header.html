@@ -27,65 +27,57 @@
 
     <!-- Mobile Navigation -->
     <div class="mobile-nav">
-        <!-- Fixed Top Bar -->
-        <div class="mobile-top-bar">
-            <img src="./images/logo.jpg" alt="Logo" class="mobile-logo">
-            <button class="mobile-action-btn notify-btn">
-                <i class="fas fa-bell"></i>
-            </button>
-        </div>
+        <!-- Hamburger Button -->
+        <button class="hamburger-btn" id="hamburgerBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
 
-        <!-- Bottom Navigation Bar -->
-        <nav class="bottom-nav">
-            <a href="./index.html" class="nav-btn" data-page="home">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
-            <a href="./content.html" class="nav-btn" data-page="content">
-                <i class="fas fa-play-circle"></i>
-                <span>Learn</span>
-            </a>
-            <a href="javascript:void(0)" class="nav-btn action-btn">
-                <div class="action-icon">
-                    <i class="fas fa-plus"></i>
-                </div>
-            </a>
-            <a href="./resources.html" class="nav-btn" data-page="resources">
-                <i class="fas fa-book"></i>
-                <span>Tools</span>
-            </a>
-            <button class="nav-btn menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-                <span>Menu</span>
-            </button>
-        </nav>
-
-        <!-- Side Menu Panel -->
-        <div class="side-menu" id="sideMenu">
+        <!-- Slide Menu -->
+        <div class="slide-menu" id="slideMenu">
             <div class="menu-header">
-                <div class="user-profile">
-                    <img src="./images/logo.jpg" alt="Profile" class="profile-img">
-                    <h3>Menu</h3>
-                </div>
-                <button class="close-menu" id="closeMenu">
+                <img src="./images/logo.jpg" alt="Logo" class="menu-logo">
+                <button class="close-btn" id="closeMenuBtn">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
-            <div class="menu-links">
-                <a href="./index.html"><i class="fas fa-home"></i> Home</a>
-                <a href="./about.html"><i class="fas fa-info-circle"></i> About</a>
-                <a href="./content.html"><i class="fas fa-play-circle"></i> Content</a>
-                <a href="./resources.html"><i class="fas fa-book"></i> Resources</a>
-                <a href="./contact.html"><i class="fas fa-envelope"></i> Contact</a>
-                <a href="https://wa.me/+94760683126" class="whatsapp-link">
-                    <i class="fab fa-whatsapp"></i> Support
-                </a>
-            </div>
 
-            <button class="logout-btn" id="menuLogoutBtn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
+            <nav class="menu-content">
+                <div class="menu-links">
+                    <a href="./index.html" class="menu-item">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="./about.html" class="menu-item">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                    <a href="./content.html" class="menu-item">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Content</span>
+                    </a>
+                    <a href="./resources.html" class="menu-item">
+                        <i class="fas fa-book"></i>
+                        <span>Resources</span>
+                    </a>
+                    <a href="./contact.html" class="menu-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact</span>
+                    </a>
+                </div>
+
+                <div class="menu-actions">
+                    <a href="https://wa.me/+94760683126" class="action-btn whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>Support</span>
+                    </a>
+                    <button class="action-btn logout-btn" id="mobileLogoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </nav>
         </div>
 
         <!-- Backdrop -->
