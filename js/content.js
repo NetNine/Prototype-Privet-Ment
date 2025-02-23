@@ -246,7 +246,10 @@ function updateVideoListHighlight() {
 // Error #3: Insecure iframe creation
 // Error #4: No video loading state
 function playVideo() {
-    if (!checkAuth()) return; // Use new auth check
+    if (!isAuthenticated()) {
+        window.location.replace('login.html');
+        return;
+    }
 
     const playlist = playlists[currentPlaylist];
     const video = playlist[currentVideoIndex];
@@ -335,7 +338,10 @@ function navigateVideo(direction) {
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-    if (!checkAuth()) return; // Use new auth check
+    if (!isAuthenticated()) {
+        window.location.replace('login.html');
+        return;
+    }
     
     createVideoList();
     playVideo(); // Play first video

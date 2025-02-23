@@ -95,19 +95,39 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("logoutBtn")?.addEventListener("click", logoutUser);
 });
 
-function isAuthenticated() {
-    const user = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    return user !== null && token !== null;
-}
-
 function checkAuth() {
-    if (!isAuthenticated()) {
-        window.location.replace('./login.html');
+    const user = localStorage.getItem('user');
+    if (!user) {
+        window.location.replace('login.html');
         return false;
     }
     return true;
 }
+
+function login(username, password) {
+    // Simple authentication - replace with your actual auth logic
+    if (username === 'admin' && password === 'password') {
+        localStorage.setItem('user', username);
+        window.location.replace('content.html');
+        return true;
+    }
+    return false;
+}
+
+function logout() {
+    localStorage.removeItem('user');
+    window.location.replace('login.html');
+}
+
+function isAuthenticated() {
+    return localStorage.getItem('user') !== null;
+}
+
+// Export functions
+window.checkAuth = checkAuth;
+window.login = login;
+window.logout = logout;
+window.isAuthenticated = isAuthenticated;
 
 // Prevent direct URL access
 document.addEventListener('DOMContentLoaded', () => {

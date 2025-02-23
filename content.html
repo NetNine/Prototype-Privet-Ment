@@ -230,14 +230,15 @@
                     </div>
                 </div>
             </div>
+            <button onclick="logout()" class="logout-btn">Logout</button>
         </main>
     </div>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="./js/content.js"></script>
     <script>
-        // Simple redirect if not authenticated
+        // Check authentication immediately
         if (!isAuthenticated()) {
-            window.location.replace('./login.html');
+            window.location.replace('login.html');
         }
     </script>
 </body>
