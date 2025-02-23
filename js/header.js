@@ -5,23 +5,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuBackdrop = document.getElementById('menuBackdrop');
     const menuLinks = document.querySelectorAll('.menu-item');
 
-    // Toggle menu function with animation delay
+    // Toggle menu function with animation delay and blur effect
     function toggleMenu(show = true) {
         if (show) {
+            document.body.classList.add('menu-open');
             menuBackdrop.style.display = 'block';
             setTimeout(() => {
-                hamburgerBtn?.classList.add('active');
                 slideMenu?.classList.add('active');
                 menuBackdrop?.classList.add('active');
-                document.body.classList.add('menu-open');
             }, 50);
         } else {
-            hamburgerBtn?.classList.remove('active');
             slideMenu?.classList.remove('active');
             menuBackdrop?.classList.remove('active');
-            document.body.classList.remove('menu-open');
             setTimeout(() => {
                 menuBackdrop.style.display = 'none';
+                document.body.classList.remove('menu-open');
             }, 300);
         }
     }
@@ -36,18 +34,25 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', () => toggleMenu(false));
     });
 
-    // Handle swipe to close
+    // Handle swipe to close with enhanced touch handling
     let touchStartX = 0;
+    let touchStartY = 0;
+
     slideMenu?.addEventListener('touchstart', e => {
         touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
     });
 
     slideMenu?.addEventListener('touchmove', e => {
         if (!slideMenu.classList.contains('active')) return;
-        const touchX = e.touches[0].clientX;
-        const diff = touchStartX - touchX;
         
-        if (diff > 50) { // Swipe left to close
+        const touchX = e.touches[0].clientX;
+        const touchY = e.touches[0].clientY;
+        const deltaX = touchStartX - touchX;
+        const deltaY = Math.abs(touchStartY - touchY);
+
+        // Only close if horizontal swipe is greater than vertical movement
+        if (deltaX > 50 && deltaX > deltaY) {
             toggleMenu(false);
         }
     });
@@ -99,7 +104,14 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = `${basePath}login.html`;
     }
 
+    // Set page type for content-specific elements
+    function setPageType() {
+        const currentPage = getActivePage();
+        document.body.setAttribute('data-page', currentPage.replace('.html', ''));
+    }
+
     // Initialize
+    setPageType();
     updateNavigation();
     setActiveMenuItem();
 

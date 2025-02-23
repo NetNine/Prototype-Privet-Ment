@@ -18,23 +18,32 @@
             <span></span><span></span><span></span>
         </button>
 
-        <button id="logoutBtn" class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i>Logout
-        </button>
+        <!-- Show logout only on content page -->
+        <div class="auth-buttons" id="authButtons">
+            <button id="logoutBtn" class="logout-btn content-only">
+                <i class="fas fa-sign-out-alt"></i>Logout
+            </button>
+        </div>
     </nav>
 
-    <!-- Mobile Navigation -->
-    <div class="mobile-nav">
-        <!-- Slide Menu -->
-        <div class="slide-menu" id="slideMenu">
-            <div class="menu-header">
-                <img src="/Prototype-Privet-Ment/images/logo.jpg" alt="Logo" class="menu-logo">
-                <button class="close-btn" id="closeMenuBtn">
-                    <i class="fas fa-times"></i>
-                </button>
+    <!-- Enhanced Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="menu-header">
+            <div class="user-profile">
+                <img src="/Prototype-Privet-Ment/images/logo.jpg" alt="Profile" class="profile-img">
+                <div class="user-info">
+                    <h4>GHOST OF THE MECHANISM®</h4>
+                    <p>[ GOLDBATCH TRADERS ]</p>
+                </div>
             </div>
+            <button class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
-            <nav class="menu-content">
+        <div class="menu-content">
+            <div class="menu-section">
+                <h3>Navigation</h3>
                 <div class="menu-links">
                     <a href="/Prototype-Privet-Ment/index.html" class="menu-item">
                         <i class="fas fa-home"></i>
@@ -57,23 +66,26 @@
                         <span>Contact</span>
                     </a>
                 </div>
+            </div>
 
-                <div class="menu-actions">
+            <div class="menu-section">
+                <h3>Quick Actions</h3>
+                <div class="quick-actions">
                     <a href="https://wa.me/+94760683126" class="action-btn whatsapp-btn">
                         <i class="fab fa-whatsapp"></i>
-                        <span>Support</span>
+                        <span>Contact Support</span>
                     </a>
-                    <button class="action-btn logout-btn" id="mobileLogoutBtn">
+                    <!-- Show logout in mobile menu only on content page -->
+                    <button class="action-btn logout-btn content-only" id="mobileLogoutBtn">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Logout</span>
                     </button>
                 </div>
-            </nav>
+            </div>
         </div>
-
-        <!-- Backdrop -->
-        <div class="menu-backdrop" id="menuBackdrop"></div>
     </div>
+
+    <div class="menu-backdrop" id="menuBackdrop"></div>
 </header>
 
 <!-- Content Wrapper -->
