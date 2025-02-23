@@ -263,6 +263,21 @@
             // For now, just redirect to login page
             window.location.href = 'login.html';
         });
+
+        document.getElementById('loginForm').onsubmit = function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simple auth - replace with your actual auth logic
+            if (username === 'admin' && password === 'password') {
+                localStorage.setItem('user', username);
+                localStorage.setItem('token', 'dummy-token');
+                window.location.replace('./content.html');
+            } else {
+                alert('Invalid credentials');
+            }
+        };
     </script>
 
      

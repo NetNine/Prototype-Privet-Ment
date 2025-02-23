@@ -171,6 +171,7 @@
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="./js/auth.js"></script>
 </head>
 <body>
     <div class="glass-container">
@@ -232,20 +233,11 @@
         </main>
     </div>
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="./js/auth.js"></script>
-    <script src="js/navigation.js"></script>
     <script src="./js/content.js"></script>
     <script>
-        // Ensure the user is authenticated before loading the content
-        document.addEventListener('DOMContentLoaded', () => {
-            if (!isAuthenticated()) {
-                window.location.href = 'login.html';
-            }
-        });
-
-        // Prevent back navigation to content page after logout
-        if (performance.navigation.type === 2) {
-            window.location.href = 'login.html';
+        // Simple redirect if not authenticated
+        if (!isAuthenticated()) {
+            window.location.replace('./login.html');
         }
     </script>
 </body>
