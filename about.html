@@ -214,5 +214,14 @@
             </div>
         </main>
     </div>
+    <script src="./js/header.js"></script>
+    <script>
+        fetch('./components/header.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('headerContainer').innerHTML = html;
+                initHeader();
+            });
+    </script>
 </body>
 </html>

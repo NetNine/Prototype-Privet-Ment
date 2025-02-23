@@ -1,62 +1,77 @@
 document.addEventListener('DOMContentLoaded', function() {
-    initializeHeader();
+    initHeader();
 });
 
-function initializeHeader() {
-    const mobileToggle = document.getElementById('mobileToggle');
+function initHeader() {
+    setupMenuToggle();
+    setupNavigation();
+    setupLogout();
+}
+
+function setupMenuToggle() {
+    const menuToggle = document.getElementById('menuToggle');
+    const bottomMenuBtn = document.getElementById('bottomMenuBtn');
+    const closeMenu = document.getElementById('closeMenu');
     const mobileMenu = document.getElementById('mobileMenu');
-    const authBtn = document.getElementById('authBtn');
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
-    // Set active page
-    setActivePage(currentPage);
-
-    // Mobile menu toggle
-    if (mobileToggle && mobileMenu) {
-        mobileToggle.addEventListener('click', () => {
-            mobileToggle.classList.toggle('active');
-            mobileMenu.classList.toggle('active');
-            document.body.classList.toggle('menu-open');
-        });
+    function toggleMenu() {
+        mobileMenu.classList.toggle('active');
+        document.body.classList.toggle('menu-open');
     }
 
-    // Auth button handling
-    if (authBtn) {
-        updateAuthButton();
-    }
+    menuToggle?.addEventListener('click', toggleMenu);
+    bottomMenuBtn?.addEventListener('click', toggleMenu);
+    closeMenu?.addEventListener('click', toggleMenu);
 
-    // Close mobile menu on link click
-    document.querySelectorAll('.mobile-nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenu.classList.remove('active');
-            mobileToggle.classList.remove('active');
-            document.body.classList.remove('menu-open');
-        });
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (mobileMenu?.classList.contains('active') &&
+            !mobileMenu.contains(e.target) &&
+            !menuToggle?.contains(e.target) &&
+            !bottomMenuBtn?.contains(e.target)) {
+            toggleMenu();
+        }
     });
 }
 
-function setActivePage(currentPage) {
+function setupNavigation() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+    // Set active states
     document.querySelectorAll('[data-page]').forEach(link => {
         if (link.getAttribute('data-page') === currentPage.replace('.html', '')) {
             link.classList.add('active');
         }
     });
+
+    // Set active state for mobile nav
+    document.querySelectorAll('.bottom-nav a').forEach(link => {
+        if (link.getAttribute('href') === `./${currentPage}`) {
+            link.classList.add('active');
+        }
+    });
 }
 
-function updateAuthButton() {
-    const authBtn = document.getElementById('authBtn');
-    const user = localStorage.getItem('user');
-
-    if (user) {
-        authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i><span class="auth-text">Logout</span>';
-        authBtn.addEventListener('click', handleLogout);
-    } else {
-        authBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span class="auth-text">Login</span>';
-        authBtn.addEventListener('click', () => window.location.href = './login.html');
-    }
+function setupLogout() {
+    const logoutBtns = document.querySelectorAll('#logoutBtn, #mobileLogoutBtn');
+    
+    logoutBtns.forEach(btn => {
+        btn.addEventListener('click', handleLogout);
+    });
 }
 
 function handleLogout() {
     localStorage.removeItem('user');
     window.location.href = './login.html';
+}
+
+// Handle auth state changes
+function updateAuthState() {
+    const isAuthenticated = !!localStorage.getItem('user');
+    const protectedPages = ['content.html', 'resources.html'];
+    const currentPage = window.location.pathname.split('/').pop();
+
+    if (!isAuthenticated && protectedPages.includes(currentPage)) {
+        window.location.href = './login.html';
+    }
 }
