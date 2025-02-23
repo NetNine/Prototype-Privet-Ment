@@ -237,11 +237,16 @@
     <script src="./js/auth.js"></script>
     <script src="./js/videoPlayer.js"></script>
     <script src="./js/content.js"></script>
-    <script>
+    <script type="module">
+        import { isAuthenticated, signOutUser } from './js/auth.js';
+        
         // Check authentication immediately
         if (!isAuthenticated()) {
             window.location.replace('login.html');
         }
+
+        // Handle logout
+        document.querySelector('.logout-btn').addEventListener('click', signOutUser);
     </script>
 </body>
 </html>

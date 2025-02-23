@@ -1,9 +1,13 @@
-// Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, signOut, onAuthStateChanged } 
-    from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { 
+    getAuth, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    signInWithEmailAndPassword, 
+    signOut 
+} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-// ✅ Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyBUUbgNtZEa-IwPgHEkG7sFebKpwoazfZ4",
     authDomain: "prototype-privet-ment-ac201.firebaseapp.com",
@@ -14,70 +18,74 @@ const firebaseConfig = {
     measurementId: "G-VVWXRMZTFQ"
 };
 
-// ✅ Initialize Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
-// ✅ Function to log in with Google
-function signInWithGoogle() {
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            if (result.user) {
-                const user = result.user;
-                localStorage.setItem('user', JSON.stringify({ displayName: user.displayName, email: user.email }));
-                console.log("Google Login Successful:", user.email);
-                window.location.href = 'content.html'; // Redirect to content page after login
-            } else {
-                console.error("No user data returned from Google.");
-                alert("Google login failed!");
-            }
-        })
-        .catch((error) => {
-            console.error("Google Login error:", error.message);
-            alert("Google login failed!");
-        });
+// Google Sign In
+export async function signInWithGoogle() {
+    try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        localStorage.setItem('user', JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName
+        }));
+        window.location.href = 'content.html';
+    } catch (error) {
+        showError('Google sign-in failed: ' + error.message);
+    }
 }
 
-// ✅ Function to log in with Email & Password
-function signInUser(event) {
-    event.preventDefault();
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            if (userCredential.user) {
-                const user = userCredential.user;
-                localStorage.setItem('user', JSON.stringify({ displayName: user.displayName, email: user.email }));
-                console.log("Email Login Successful:", user.email);
-                window.location.href = 'content.html'; // Redirect to content page
-            } else {
-                console.error("No user data returned from email login.");
-                alert("Login failed!");
-            }
-        })
-        .catch((error) => {
-            console.error("Login error:", error.message);
-            alert("Invalid Email or Password!");
-        });
+// Email Sign In
+export async function signInWithEmail(email, password) {
+    try {
+        const result = await signInWithEmailAndPassword(auth, email, password);
+        const user = result.user;
+        localStorage.setItem('user', JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.email.split('@')[0]
+        }));
+        window.location.href = 'content.html';
+    } catch (error) {
+        showError('Email sign-in failed: ' + error.message);
+    }
 }
 
-// ✅ Function to log out and redirect to login page
-function logoutUser() {
-    signOut(auth)
-        .then(() => {
-            console.log("User Logged Out");
-            localStorage.removeItem('user'); // Remove user session
-            window.location.href = 'login.html'; // Redirect to login page after logout
-        })
-        .catch((error) => {
-            console.error("Logout error:", error.message);
-            alert("Logout failed!");
-        });
+// Sign Out
+export async function signOutUser() {
+    try {
+        await signOut(auth);
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+    } catch (error) {
+        showError('Sign-out failed: ' + error.message);
+    }
 }
 
-// ✅ Check if user is logged in
+// Auth Check
+export function isAuthenticated() {
+    const user = localStorage.getItem('user');
+    return user !== null;
+}
+
+// Error Display
+function showError(message) {
+    const errorDiv = document.getElementById('errorMessage');
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        setTimeout(() => errorDiv.style.display = 'none', 5000);
+    }
+}
+
+// Export auth instance
+export { auth };
+
+// Check if user is logged in
 onAuthStateChanged(auth, (user) => {
     if (user) {
         localStorage.setItem('user', JSON.stringify({ displayName: user.displayName, email: user.email }));
@@ -88,16 +96,17 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// ✅ Attach Event Listeners for Login & Logout
+// Attach Event Listeners for Login & Logout
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("googleLoginBtn")?.addEventListener("click", signInWithGoogle);
-    document.getElementById("loginForm")?.addEventListener("submit", signInUser);
-    document.getElementById("logoutBtn")?.addEventListener("click", logoutUser);
+    document.getElementById("loginForm")?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        signInWithEmail(email, password);
+    });
+    document.getElementById("logoutBtn")?.addEventListener("click", signOutUser);
 });
-
-function isAuthenticated() {
-    return localStorage.getItem('user') !== null;
-}
 
 function login(username, password) {
     // Simple login for demo - replace with your actual login logic
