@@ -133,3 +133,69 @@ if (document.readyState === 'loading') {
 } else {
     initNavigation();
 }
+
+function initMobileNavigation() {
+    const menuTrigger = document.getElementById('mobileMenuTrigger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const backdrop = document.getElementById('mobileOverlay');
+    const bottomNav = document.getElementById('bottomNav');
+
+    // Set active bottom nav item
+    if (bottomNav) {
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const activeLink = bottomNav.querySelector(`[href="./${currentPage}"]`);
+        if (activeLink) {
+            activeLink.classList.add('active');
+        }
+    }
+
+    // Handle menu trigger
+    if (menuTrigger) {
+        menuTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleMobileMenu();
+        });
+    }
+
+    // Handle backdrop click
+    if (backdrop) {
+        backdrop.addEventListener('click', toggleMobileMenu);
+    }
+
+    // Prevent body scroll when menu is open
+    function toggleBodyScroll(disable) {
+        document.body.style.overflow = disable ? 'hidden' : '';
+    }
+
+    // Enhanced menu toggle
+    function toggleMobileMenu() {
+        mobileMenu?.classList.toggle('active');
+        backdrop?.classList.toggle('active');
+        toggleBodyScroll(mobileMenu?.classList.contains('active'));
+    }
+
+    // Handle swipe to close menu
+    let touchStartX = 0;
+    if (mobileMenu) {
+        mobileMenu.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        mobileMenu.addEventListener('touchmove', e => {
+            if (!mobileMenu.classList.contains('active')) return;
+            
+            const touchX = e.touches[0].clientX;
+            const diff = touchStartX - touchX;
+            
+            if (diff > 50) {
+                toggleMobileMenu();
+            }
+        });
+    }
+}
+
+// Add to existing initialization
+document.addEventListener('DOMContentLoaded', () => {
+    initNavigation();
+    initMobileNavigation();
+});

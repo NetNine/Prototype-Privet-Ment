@@ -1315,3 +1315,25 @@ body {
     border: none;
     border-radius: 8px;
 }
+
+/* Device-specific display classes */
+@media screen and (min-width: 769px) {
+    .mobile-only {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .desktop-only {
+        display: none !important;
+    }
+}
+
+/* Prevent scroll when mobile menu is open */
+body.no-scroll-on-menu {
+    overflow-y: auto;
+}
+
+body.no-scroll-on-menu.menu-open {
+    overflow: hidden;
+}
