@@ -94,3 +94,30 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("loginForm")?.addEventListener("submit", signInUser);
     document.getElementById("logoutBtn")?.addEventListener("click", logoutUser);
 });
+
+function isAuthenticated() {
+    return localStorage.getItem('user') !== null;
+}
+
+function login(username, password) {
+    // Simple login for demo - replace with your actual login logic
+    if (username === "admin" && password === "password") {
+        localStorage.setItem('user', username);
+        return true;
+    }
+    return false;
+}
+
+function logout() {
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+}
+
+// Check authentication on page load
+function checkAuth() {
+    if (!isAuthenticated()) {
+        window.location.replace('login.html');
+        return false;
+    }
+    return true;
+}
