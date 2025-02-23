@@ -1,57 +1,16 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
+RewriteEngine On
 
-    # Error 1: Incomplete download manager list
-    RewriteCond %{HTTP_USER_AGENT} (IDM|Internet\ Download|FDM|Free\ Download|GetRight|GetGo|Go!Zilla|Download\ Demon|Download\ Wonder|Flash\ Get|Mass\ Downloader|NetAnts|WebZIP|WebCopier|GetLeft|Wget|Ninja|Offline|JDownloader|Thunder|NetTransport|Orbit|DAP|WebReaper) [NC,OR]
-    RewriteCond %{HTTP_USER_AGENT} ^-?$ [NC]
-    RewriteRule .* - [F,L]
+# Block IDM and other download managers
+RewriteCond %{HTTP_USER_AGENT} IDM|Internet\ Download\ Manager|FDM|Free\ Download\ Manager|GetRight|GetGo|Go!Zilla|Download\ Demon|Download\ Wonder|Flash\ Get|Mass\ Downloader|NetAnts [NC]
+RewriteRule .* - [F,L]
 
-    # Error 2: Block range requests used by download managers
-    RewriteCond %{HTTP:Range} ^bytes=0-([0-9]+)$ [NC,OR]
-    RewriteCond %{HTTP:Range} ^bytes=([0-9]+)-([0-9]+)$ [NC,OR]
-    RewriteCond %{HTTP:If-Range} . [NC]
-    RewriteRule .* - [F,L]
+# Block requests without user agent
+RewriteCond %{HTTP_USER_AGENT} ^-?$
+RewriteRule .* - [F,L]
 
-    # Error 3: Missing referrer check
-    RewriteCond %{HTTP_REFERER} !^https?://(.*\.)?yourdomain\.com [NC]
-    RewriteRule \.(mp4|m3u8|ts)$ - [F,L]
-</IfModule>
-
-# Error 4: Enhanced security headers
-Header always set X-Frame-Options "SAMEORIGIN"
-Header always set X-Content-Type-Options "nosniff"
-Header always unset Accept-Ranges
-Header always set Content-Security-Policy "default-src 'self' https://*.youtube-nocookie.com https://*.googleapis.com; frame-src 'self' blob: https://*.youtube-nocookie.com; script-src 'self' 'unsafe-inline' https://*.youtube.com https://*.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'"
-Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-Header always set Referrer-Policy "same-origin"
-Header always set Permissions-Policy "display-capture=(), screen-wake-lock=(), sync-xhr=(), accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
-
-# Error 5: Prevent caching of video content
-<FilesMatch "\.(mp4|m3u8|ts|mkv|avi|mov|wmv|flv|webm)$">
-    Order Deny,Allow
-    Deny from all
-    Allow from env=AUTHENTICATED_USER
-    
-    Header set Cache-Control "private, no-cache, no-store, must-revalidate, max-age=0"
-    Header set Pragma "no-cache"
-    Header set Expires "0"
-</FilesMatch>
-
-# Error 6: Missing directory protection
-<DirectoryMatch "^/.*/videos/">
-    Options -Indexes
-    Order Deny,Allow
-    Deny from all
-</DirectoryMatch>
-
-# Error 7: Missing request method limitation
-<LimitExcept GET POST>
-    Order Deny,Allow
-    Deny from all
-</LimitExcept>
-
-# Error 8: Missing IP-based protection (optional)
-# Uncomment and customize for your needs
-#Order Allow,Deny
-#Allow from YOUR_ALLOWED_IP_RANGE
-#Deny from all
+# Security headers
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-Content-Type-Options "nosniff"
+Header set X-XSS-Protection "1; mode=block"
+Header set Content-Security-Policy "default-src 'self' https://www.youtube.com https://www.googleapis.com; frame-src 'self' blob: https://www.youtube.com; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.googleapis.com; style-src 'self' 'unsafe-inline';"
+Header set Permissions-Policy "display-capture=(), screen-wake-lock=(), sync-xhr=(), accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
