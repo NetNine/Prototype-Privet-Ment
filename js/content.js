@@ -247,7 +247,7 @@ function updateVideoListHighlight() {
 // Error #4: No video loading state
 function playVideo() {
     if (!isAuthenticated()) {
-        window.location.replace('login.html');
+        window.location.href = 'login.html';
         return;
     }
 
@@ -260,18 +260,22 @@ function playVideo() {
             // Show loading state
             videoContainer.innerHTML = '<div class="loading">Loading...</div>';
 
-            // Create secure iframe
-            const iframe = document.createElement('iframe');
-            iframe.width = '100%';
-            iframe.height = '100%';
-            iframe.src = `https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&showinfo=0`;
-            iframe.frameBorder = '0';
-            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-            iframe.allowFullscreen = true;
+            // Create secure iframe with sandboxing
+            const secureIframe = document.createElement('iframe');
+            secureIframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');
+            secureIframe.src = `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&showinfo=0`;
+            secureIframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+            secureIframe.className = 'secure-video-frame';
+            secureIframe.style.cssText = 'width: 100%; height: 100%; border: none;';
 
-            // Update container
+            // Clear container and add iframe
             videoContainer.innerHTML = '';
-            videoContainer.appendChild(iframe);
+            videoContainer.appendChild(secureIframe);
+
+            // Add error handler
+            secureIframe.onerror = () => {
+                videoContainer.innerHTML = '<div class="error">Error loading video</div>';
+            };
 
             // Update info
             document.getElementById('currentVideoTitle').textContent = video.title;
@@ -338,11 +342,6 @@ function navigateVideo(direction) {
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-    if (!isAuthenticated()) {
-        window.location.replace('login.html');
-        return;
-    }
-    
     createVideoList();
     playVideo(); // Play first video
 
