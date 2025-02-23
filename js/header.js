@@ -131,4 +131,46 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleMenu(false);
         }
     });
+
+    // Handle bottom navigation active state
+    const navItems = document.querySelectorAll('.nav-item');
+    const currentPath = window.location.pathname;
+
+    navItems.forEach(item => {
+        const href = item.getAttribute('href');
+        if (href && currentPath.includes(href)) {
+            item.classList.add('active');
+        }
+        
+        // Add ripple effect on click
+        item.addEventListener('click', function(e) {
+            if (!this.classList.contains('center-item')) {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+                this.appendChild(ripple);
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = `${size}px`;
+                
+                const x = e.clientX - rect.left - size/2;
+                const y = e.clientY - rect.top - size/2;
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                setTimeout(() => ripple.remove(), 600);
+            }
+        });
+    });
+
+    // Center button action
+    const centerButton = document.querySelector('.center-button');
+    if (centerButton) {
+        centerButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Add your action here
+            this.classList.add('pulse');
+            setTimeout(() => this.classList.remove('pulse'), 300);
+        });
+    }
 });
