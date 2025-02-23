@@ -3,32 +3,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const slideMenu = document.getElementById('slideMenu');
     const closeMenuBtn = document.getElementById('closeMenuBtn');
     const menuBackdrop = document.getElementById('menuBackdrop');
-    const menuItems = document.querySelectorAll('.menu-item');
+    const menuLinks = document.querySelectorAll('.menu-item');
+    const menuTrigger = document.getElementById('menuTrigger');
 
-    // Toggle menu function
+    // Toggle menu function with animation delay
     function toggleMenu(show = true) {
-        hamburgerBtn.classList.toggle('active', show);
-        slideMenu.classList.toggle('active', show);
-        menuBackdrop.classList.toggle('active', show);
-        document.body.classList.toggle('menu-open', show);
+        if (show) {
+            menuBackdrop.style.display = 'block';
+            setTimeout(() => {
+                hamburgerBtn?.classList.add('active');
+                slideMenu?.classList.add('active');
+                menuBackdrop?.classList.add('active');
+                document.body.classList.add('menu-open');
+            }, 50);
+        } else {
+            hamburgerBtn?.classList.remove('active');
+            slideMenu?.classList.remove('active');
+            menuBackdrop?.classList.remove('active');
+            document.body.classList.remove('menu-open');
+            setTimeout(() => {
+                menuBackdrop.style.display = 'none';
+            }, 300);
+        }
     }
 
-    // Event listeners
+    // Event Listeners
     hamburgerBtn?.addEventListener('click', () => toggleMenu(true));
+    menuTrigger?.addEventListener('click', () => toggleMenu(true));
     closeMenuBtn?.addEventListener('click', () => toggleMenu(false));
     menuBackdrop?.addEventListener('click', () => toggleMenu(false));
 
-    // Close menu when clicking menu items
-    menuItems.forEach(item => {
-        item.addEventListener('click', () => toggleMenu(false));
-    });
-
-    // Set active menu item
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    menuItems.forEach(item => {
-        if (item.getAttribute('href').includes(currentPage)) {
-            item.classList.add('active');
-        }
+    // Close menu when clicking links
+    menuLinks.forEach(link => {
+        link.addEventListener('click', () => toggleMenu(false));
     });
 
     // Handle swipe to close
@@ -39,11 +46,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     slideMenu?.addEventListener('touchmove', e => {
         if (!slideMenu.classList.contains('active')) return;
-        
         const touchX = e.touches[0].clientX;
         const diff = touchStartX - touchX;
         
-        if (diff < -50) {
+        if (diff > 50) { // Swipe left to close
+            toggleMenu(false);
+        }
+    });
+
+    // Set active menu item
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    menuLinks.forEach(link => {
+        if (link.getAttribute('href').includes(currentPage)) {
+            link.classList.add('active');
+        }
+    });
+
+    // Handle escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && slideMenu?.classList.contains('active')) {
             toggleMenu(false);
         }
     });
