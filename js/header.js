@@ -1,77 +1,43 @@
 document.addEventListener('DOMContentLoaded', function() {
-    initHeader();
-});
-
-function initHeader() {
-    setupMenuToggle();
-    setupNavigation();
-    setupLogout();
-}
-
-function setupMenuToggle() {
-    const menuToggle = document.getElementById('menuToggle');
-    const bottomMenuBtn = document.getElementById('bottomMenuBtn');
+    const menuTrigger = document.getElementById('menuTrigger');
+    const sideMenu = document.getElementById('sideMenu');
     const closeMenu = document.getElementById('closeMenu');
-    const mobileMenu = document.getElementById('mobileMenu');
+    const menuBackdrop = document.getElementById('menuBackdrop');
+    const logoutBtns = document.querySelectorAll('.logout-btn');
 
+    // Toggle menu function
     function toggleMenu() {
-        mobileMenu.classList.toggle('active');
+        menuTrigger.classList.toggle('active');
+        sideMenu.classList.toggle('active');
+        menuBackdrop.classList.toggle('active');
         document.body.classList.toggle('menu-open');
     }
 
-    menuToggle?.addEventListener('click', toggleMenu);
-    bottomMenuBtn?.addEventListener('click', toggleMenu);
+    // Event listeners
+    menuTrigger?.addEventListener('click', toggleMenu);
     closeMenu?.addEventListener('click', toggleMenu);
+    menuBackdrop?.addEventListener('click', toggleMenu);
 
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (mobileMenu?.classList.contains('active') &&
-            !mobileMenu.contains(e.target) &&
-            !menuToggle?.contains(e.target) &&
-            !bottomMenuBtn?.contains(e.target)) {
+    // Close menu when clicking menu items
+    document.querySelectorAll('.menu-links a').forEach(link => {
+        link.addEventListener('click', () => {
             toggleMenu();
-        }
+        });
     });
-}
 
-function setupNavigation() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    // Handle logout
+    logoutBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            localStorage.removeItem('user');
+            window.location.href = './login.html';
+        });
+    });
 
     // Set active states
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('[data-page]').forEach(link => {
         if (link.getAttribute('data-page') === currentPage.replace('.html', '')) {
             link.classList.add('active');
         }
     });
-
-    // Set active state for mobile nav
-    document.querySelectorAll('.bottom-nav a').forEach(link => {
-        if (link.getAttribute('href') === `./${currentPage}`) {
-            link.classList.add('active');
-        }
-    });
-}
-
-function setupLogout() {
-    const logoutBtns = document.querySelectorAll('#logoutBtn, #mobileLogoutBtn');
-    
-    logoutBtns.forEach(btn => {
-        btn.addEventListener('click', handleLogout);
-    });
-}
-
-function handleLogout() {
-    localStorage.removeItem('user');
-    window.location.href = './login.html';
-}
-
-// Handle auth state changes
-function updateAuthState() {
-    const isAuthenticated = !!localStorage.getItem('user');
-    const protectedPages = ['content.html', 'resources.html'];
-    const currentPage = window.location.pathname.split('/').pop();
-
-    if (!isAuthenticated && protectedPages.includes(currentPage)) {
-        window.location.href = './login.html';
-    }
-}
+});

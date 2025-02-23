@@ -1,10 +1,9 @@
 <header class="main-header">
-    <!-- Desktop Navigation -->
     <nav class="desktop-nav">
         <div class="logo">
             <img src="./images/logo.jpg" alt="Logo">
         </div>
-        
+
         <ul class="nav-links">
             <li><a href="./index.html" data-page="home"><i class="fas fa-home"></i>Home</a></li>
             <li><a href="./about.html" data-page="about"><i class="fas fa-info-circle"></i>About</a></li>
@@ -12,7 +11,15 @@
             <li><a href="./resources.html" data-page="resources"><i class="fas fa-book"></i>Resources</a></li>
             <li><a href="./contact.html" data-page="contact"><i class="fas fa-envelope"></i>Contact</a></li>
         </ul>
-        
+
+        <!-- Menu Trigger Button -->
+        <button class="menu-trigger" id="menuTrigger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Logout Button -->
         <button id="logoutBtn" class="logout-btn">
             <i class="fas fa-sign-out-alt"></i>Logout
         </button>
@@ -56,41 +63,29 @@
         <!-- Side Menu Panel -->
         <div class="side-menu" id="sideMenu">
             <div class="menu-header">
-                <h3>Menu</h3>
+                <div class="user-profile">
+                    <img src="./images/logo.jpg" alt="Profile" class="profile-img">
+                    <h3>Menu</h3>
+                </div>
                 <button class="close-menu" id="closeMenu">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div class="menu-content">
-                <!-- User Profile Section -->
-                <div class="user-profile">
-                    <img src="./images/logo.jpg" alt="Profile" class="profile-img">
-                    <div class="user-info">
-                        <h4>Welcome</h4>
-                        <p>Student</p>
-                    </div>
-                </div>
-
-                <!-- Menu Links -->
-                <div class="menu-links">
-                    <a href="./index.html"><i class="fas fa-home"></i> Home</a>
-                    <a href="./about.html"><i class="fas fa-info-circle"></i> About</a>
-                    <a href="./content.html"><i class="fas fa-play-circle"></i> Content</a>
-                    <a href="./resources.html"><i class="fas fa-book"></i> Resources</a>
-                    <a href="./contact.html"><i class="fas fa-envelope"></i> Contact</a>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="quick-actions">
-                    <a href="https://wa.me/+94760683126" class="whatsapp-btn">
-                        <i class="fab fa-whatsapp"></i> Contact Support
-                    </a>
-                    <button class="logout-btn" id="mobileLogoutBtn">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
+            <div class="menu-links">
+                <a href="./index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="./about.html"><i class="fas fa-info-circle"></i> About</a>
+                <a href="./content.html"><i class="fas fa-play-circle"></i> Content</a>
+                <a href="./resources.html"><i class="fas fa-book"></i> Resources</a>
+                <a href="./contact.html"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="https://wa.me/+94760683126" class="whatsapp-link">
+                    <i class="fab fa-whatsapp"></i> Support
+                </a>
             </div>
+
+            <button class="logout-btn" id="menuLogoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
 
         <!-- Backdrop -->
