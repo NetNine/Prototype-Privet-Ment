@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Check if current page is protected
     function isProtectedPage() {
-        const protectedPages = ['content.html', 'resources.html'];
+        const protectedPages = ['content.html'];
         return protectedPages.includes(getActivePage());
     }
 
