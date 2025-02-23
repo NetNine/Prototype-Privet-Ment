@@ -534,37 +534,58 @@ body {
 
 /* Mobile Navigation */
 .hamburger-btn {
-    position: fixed;
-    top: 10px;
-    right: 10px;
+    position: relative;
     width: 44px;
     height: 44px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(45deg, rgba(0, 255, 169, 0.1), rgba(0, 215, 255, 0.1));
+    border: 1px solid rgba(0, 255, 169, 0.2);
     border-radius: 8px;
     cursor: pointer;
     z-index: 1002;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 255, 169, 0.1), 0 0 40px rgba(0, 215, 255, 0.1);
+}
+
+.hamburger-lines {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    padding: 10px;
-    transition: all 0.3s ease;
+    gap: 6px;
+    width: 24px;
 }
 
 .hamburger-btn span {
     display: block;
-    width: 24px;
+    width: 100%;
     height: 2px;
     background: var(--primary-color);
     transition: all 0.3s ease;
     transform-origin: center;
+    box-shadow: 0 0 5px var(--primary-color);
+}
+
+/* Hover Effects */
+.hamburger-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 255, 169, 0.2), 0 0 50px rgba(0, 215, 255, 0.2);
+}
+
+.hamburger-btn:hover span {
+    box-shadow: 0 0 8px var(--primary-color);
 }
 
 /* Active State Animation */
+.hamburger-btn.active {
+    background: linear-gradient(45deg, rgba(0, 255, 169, 0.2), rgba(0, 215, 255, 0.2));
+    box-shadow: 0 0 20px rgba(0, 255, 169, 0.3), 0 0 60px rgba(0, 215, 255, 0.3);
+}
+
 .hamburger-btn.active span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+    transform: translateY(8px) rotate(45deg);
 }
 
 .hamburger-btn.active span:nth-child(2) {
@@ -572,7 +593,25 @@ body {
 }
 
 .hamburger-btn.active span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Glow Animation */
+.hamburger-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 255, 169, 0.2) 10%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+}
+
+.hamburger-btn:hover::before {
+    opacity: 1;
 }
 
 /* Slide Menu */

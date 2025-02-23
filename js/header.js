@@ -5,11 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuBackdrop = document.getElementById('menuBackdrop');
     const menuLinks = document.querySelectorAll('.menu-item');
 
-    // Toggle menu function with animation delay and blur effect
+    // Toggle menu function with enhanced animation
     function toggleMenu(show = true) {
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        
         if (show) {
             document.body.classList.add('menu-open');
             menuBackdrop.style.display = 'block';
+            hamburgerBtn?.classList.add('active');
             setTimeout(() => {
                 slideMenu?.classList.add('active');
                 menuBackdrop?.classList.add('active');
@@ -17,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             slideMenu?.classList.remove('active');
             menuBackdrop?.classList.remove('active');
+            hamburgerBtn?.classList.remove('active');
             setTimeout(() => {
                 menuBackdrop.style.display = 'none';
                 document.body.classList.remove('menu-open');
