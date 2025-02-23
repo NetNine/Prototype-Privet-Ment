@@ -3,16 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base href="/Prototype-Privet-Ment/">
-    <title>Page Not Found</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <title>Page Not Found - GHOST OF THE MECHANISM®</title>
+    <link rel="stylesheet" href="/Prototype-Privet-Ment/css/style.css">
+    <link rel="stylesheet" href="/Prototype-Privet-Ment/css/header.css">
+    <script>
+        // GitHub Pages 404 handler
+        const segment = 1;
+        const paths = location.pathname.split('/');
+        if (paths.length > segment) {
+            window.location.href = '/Prototype-Privet-Ment/';
+        }
+    </script>
 </head>
 <body>
     <div class="glass-container">
-        <div class="glass-card">
-            <h1>404 - Page Not Found</h1>
-            <p>The page you're looking for doesn't exist.</p>
-            <a href="./" class="cta-button primary">Go Home</a>
+        <div class="content-area">
+            <div class="glass-card">
+                <h1>Page Not Found</h1>
+                <p>Redirecting to home page...</p>
+                <a href="/Prototype-Privet-Ment/" class="cta-button primary">Go Home</a>
+            </div>
         </div>
     </div>
 </body>

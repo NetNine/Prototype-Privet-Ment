@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeMenuBtn = document.getElementById('closeMenuBtn');
     const menuBackdrop = document.getElementById('menuBackdrop');
     const menuLinks = document.querySelectorAll('.menu-item');
-    const menuTrigger = document.getElementById('menuTrigger');
 
     // Toggle menu function with animation delay
     function toggleMenu(show = true) {
@@ -29,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event Listeners
     hamburgerBtn?.addEventListener('click', () => toggleMenu(true));
-    menuTrigger?.addEventListener('click', () => toggleMenu(true));
     closeMenuBtn?.addEventListener('click', () => toggleMenu(false));
     menuBackdrop?.addEventListener('click', () => toggleMenu(false));
 
@@ -54,12 +52,61 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Set active menu item
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    menuLinks.forEach(link => {
-        if (link.getAttribute('href').includes(currentPage)) {
-            link.classList.add('active');
+    // GitHub Pages path compatibility
+    const basePath = '/Prototype-Privet-Ment/';
+    
+    // Update active page detection for GitHub Pages
+    function getActivePage() {
+        const path = window.location.pathname;
+        const page = path.replace(basePath, '').split('/').pop() || 'index.html';
+        return page;
+    }
+
+    // Set active menu item with GitHub Pages support
+    function setActiveMenuItem() {
+        const currentPage = getActivePage();
+        const menuLinks = document.querySelectorAll('.menu-item, .nav-links a');
+        
+        menuLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href.includes(currentPage)) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    }
+
+    // Update navigation for GitHub Pages
+    function updateNavigation() {
+        setActiveMenuItem();
+        const isAuthenticated = !!localStorage.getItem('user');
+        
+        if (!isAuthenticated && isProtectedPage()) {
+            window.location.href = `${basePath}login.html`;
         }
+    }
+
+    // Check if current page is protected
+    function isProtectedPage() {
+        const protectedPages = ['content.html', 'resources.html'];
+        return protectedPages.includes(getActivePage());
+    }
+
+    // Handle logout with proper redirection
+    function handleLogout() {
+        localStorage.removeItem('user');
+        window.location.href = `${basePath}login.html`;
+    }
+
+    // Initialize
+    updateNavigation();
+    setActiveMenuItem();
+
+    // Event Listeners
+    const logoutButtons = document.querySelectorAll('#logoutBtn, #mobileLogoutBtn');
+    logoutButtons.forEach(btn => {
+        btn.addEventListener('click', handleLogout);
     });
 
     // Handle escape key
