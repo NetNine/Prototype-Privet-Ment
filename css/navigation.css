@@ -8,6 +8,43 @@
     padding: 1rem 2rem;
 }
 
+/* Desktop Navigation */
+.desktop-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    display: none; /* Hidden by default */
+}
+
+/* Mobile Navigation */
+.mobile-nav {
+    display: none; /* Hidden by default */
+}
+
+/* Show appropriate navigation based on screen size */
+@media screen and (min-width: 769px) {
+    .desktop-nav {
+        display: block;
+    }
+    
+    .mobile-nav {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .desktop-nav {
+        display: none !important;
+    }
+    
+    .mobile-nav {
+        display: block;
+    }
+}
+
 .nav-container {
     display: flex;
     justify-content: space-between;

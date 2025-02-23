@@ -52,22 +52,46 @@ if (window.location.pathname.includes("content.html")) {
 // Run navigation update on page load
 document.addEventListener('DOMContentLoaded', updateNavigation);
 
-function initNavigation() {
-    const currentPath = window.location.pathname;
-    const pageName = currentPath.split('/').pop() || 'index.html';
+function initNavigation(isMobile) {
+    if (isMobile) {
+        setupMobileNavigation();
+    } else {
+        setupDesktopNavigation();
+    }
+
+    // Handle logout for both mobile and desktop
+    setupLogoutHandlers();
+}
+
+function setupMobileNavigation() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileBackdrop = document.getElementById('mobileBackdrop');
     
-    // Set active nav item
-    document.querySelectorAll('.nav-link').forEach(link => {
-        if (link.getAttribute('href') === pageName) {
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => toggleMobileMenu(true));
+        mobileBackdrop?.addEventListener('click', () => toggleMobileMenu(false));
+    }
+
+    // Setup bottom navigation
+    setupBottomNav();
+}
+
+function setupDesktopNavigation() {
+    // Set active state for current page
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.desktop-nav .nav-menu a').forEach(link => {
+        if (link.getAttribute('href').includes(currentPage)) {
             link.classList.add('active');
         }
     });
+}
 
-    // Setup mobile menu
-    setupMobileMenu();
-    
-    // Update auth state
-    updateAuthState();
+function setupLogoutHandlers() {
+    const logoutBtns = document.querySelectorAll('.logout-btn');
+    logoutBtns.forEach(btn => {
+        btn.addEventListener('click', handleLogout);
+    });
 }
 
 function setupMobileMenu() {
@@ -196,6 +220,7 @@ function initMobileNavigation() {
 
 // Add to existing initialization
 document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
+    const isMobile = window.innerWidth <= 768;
+    initNavigation(isMobile);
     initMobileNavigation();
 });
