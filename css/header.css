@@ -849,11 +849,11 @@ body[data-page="content"] .content-only {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 65px;
+    height: 48px;
     background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
     z-index: 999;
-    padding: 0 10px;
+    padding: 0 20px;
     justify-content: space-around;
     align-items: center;
     border-top: 1px solid rgba(255, 255, 255, 0.1);

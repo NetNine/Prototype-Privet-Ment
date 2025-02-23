@@ -173,4 +173,28 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => this.classList.remove('pulse'), 300);
         });
     }
+
+    // Add scroll effect for bottom navbar
+    const bottomNav = document.querySelector('.bottom-navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            bottomNav?.classList.add('scrolled');
+        } else {
+            bottomNav?.classList.remove('scrolled');
+        }
+    });
+
+    // Add ripple effect to nav items
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = `${e.clientX - rect.left}px`;
+            ripple.style.top = `${e.clientY - rect.top}px`;
+            this.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
 });

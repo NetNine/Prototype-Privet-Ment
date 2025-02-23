@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Test</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="css/header.css">
+    
+    <!-- Custom Variables -->
+    <style>
+        :root {
+            --primary-color: #00ffa9;
+            --secondary-color: #00d7ff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include the header -->
+    <div id="header-container"></div>
+
+    <!-- Test Content -->
+    <main>
+        <h1>Test Page</h1>
+        <p>This is a test page to verify the navigation.</p>
+    </main>
+
+    <!-- jQuery (for loading components) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Load header component -->
+    <script>
+        $(document).ready(function() {
+            $("#header-container").load("components/header.html", function() {
+                // After header loads, initialize header.js
+                $.getScript("js/header.js");
+            });
+        });
+    </script>
+</body>
+</html>
