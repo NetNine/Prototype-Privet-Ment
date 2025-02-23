@@ -230,31 +230,14 @@
     </footer>
 
     <!-- ✅ Import Firebase Auth -->
-    <script type="module">
-        import { signInWithGoogle, signInWithEmail, isAuthenticated } from './js/auth.js';
-
-        // Check if already logged in
-        if (isAuthenticated()) {
-            window.location.replace('content.html');
-        }
-
-        // Show Email Login Form
+    <script type="module" src="js/auth.js"></script>
+    <script>
+        // Show Email Login Form when clicked
         document.getElementById("emailLoginBtn").addEventListener("click", () => {
             document.getElementById("emailLoginForm").style.display = "block";
         });
 
-        // Google Login
-        document.getElementById("googleLoginBtn").addEventListener("click", signInWithGoogle);
-
-        // Email Login
-        document.getElementById("loginForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            await signInWithEmail(email, password);
-        });
-
-        // Update UI based on auth state
+        // Show logout button if user is logged in
         const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
             document.getElementById("logoutBtn").style.display = "block";
@@ -262,10 +245,26 @@
             document.getElementById("emailLoginBtn").style.display = "none";
         }
 
-        // Prevent back navigation after logout
+        // Prevent back navigation to content page after logout
         if (performance.navigation.type === 2) {
-            window.location.replace('login.html');
+            window.location.href = 'login.html';
         }
+        // Handle logout button click
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            // Perform logout operation here (e.g., Firebase sign out)
+            // firebase.auth().signOut().then(() => {
+            //     // Sign-out successful.
+            //     window.location.href = 'login.html';
+            // }).catch((error) => {
+            //     // An error happened.
+            //     console.error("Logout error:", error);
+            // });
+
+            // For now, just redirect to login page
+            window.location.href = 'login.html';
+        });
     </script>
+
+     
 </body>
 </html>

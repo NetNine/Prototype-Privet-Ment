@@ -245,22 +245,47 @@ function updateVideoListHighlight() {
 // Error #2: Missing error handling
 // Error #3: Insecure iframe creation
 // Error #4: No video loading state
-let videoPlayer = null;
-
 function playVideo() {
     if (!isAuthenticated()) {
-        window.location.replace('login.html');
+        window.location.href = 'login.html';
         return;
     }
 
     const playlist = playlists[currentPlaylist];
     const video = playlist[currentVideoIndex];
+    const videoContainer = document.getElementById('videoContainer');
     
-    if (!videoPlayer) {
-        videoPlayer = new VideoPlayer('videoContainer');
+    if (videoContainer && video) {
+        try {
+            // Show loading state
+            videoContainer.innerHTML = '<div class="loading">Loading...</div>';
+
+            // Create secure iframe with sandboxing
+            const secureIframe = document.createElement('iframe');
+            secureIframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');
+            secureIframe.src = `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&showinfo=0`;
+            secureIframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+            secureIframe.className = 'secure-video-frame';
+            secureIframe.style.cssText = 'width: 100%; height: 100%; border: none;';
+
+            // Clear container and add iframe
+            videoContainer.innerHTML = '';
+            videoContainer.appendChild(secureIframe);
+
+            // Add error handler
+            secureIframe.onerror = () => {
+                videoContainer.innerHTML = '<div class="error">Error loading video</div>';
+            };
+
+            // Update info
+            document.getElementById('currentVideoTitle').textContent = video.title;
+            document.getElementById('currentVideoDescription').textContent = video.description;
+        } catch (error) {
+            console.error('Error playing video:', error);
+            videoContainer.innerHTML = '<div class="error">Error loading video</div>';
+        }
     }
 
-    videoPlayer.loadVideo(video.id, video.title, video.description);
     updateNavigationButtons();
     updateVideoListHighlight();
 }
@@ -317,11 +342,6 @@ function navigateVideo(direction) {
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-    if (!isAuthenticated()) {
-        window.location.replace('login.html');
-        return;
-    }
-    
     createVideoList();
     playVideo(); // Play first video
 
