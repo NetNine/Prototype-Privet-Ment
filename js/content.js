@@ -295,22 +295,6 @@ function applyAdvancedProtection() {
         window.top.location.href = window.self.location.href;
     }
 
-    // Detect and block browser extensions
-    const detectExtensions = () => {
-        const extensionDetector = document.createElement('div');
-        extensionDetector.setAttribute('id', '__idm_helper');
-        document.body.appendChild(extensionDetector);
-        
-        setTimeout(() => {
-            if (window.__IDM__ || 
-                extensionDetector.offsetHeight !== undefined || 
-                document.querySelector('[class*="idm"]')) {
-                disablePlayback('Download extensions detected');
-            }
-            extensionDetector.remove();
-        }, 100);
-    };
-
     // Enhanced encryption layer
     const addEncryptionLayer = () => {
         const grid = document.querySelector('.encryption-grid');
@@ -367,27 +351,10 @@ function applyAdvancedProtection() {
         }, true);
     };
 
-    // Disable playback if tampering detected
-    const disablePlayback = (reason) => {
-        iframe.src = '';
-        wrapper.innerHTML = `<div class="security-alert">Playback disabled: ${reason}</div>`;
-    };
-
     // Initialize all protections
-    detectExtensions();
     addEncryptionLayer();
     applyWatermark();
     blockDownloads();
-
-    // Monitor for tampering attempts
-    const securityInterval = setInterval(() => {
-        if (!document.contains(iframe) || 
-            iframe.src.includes('download') ||
-            wrapper.style.visibility === 'hidden') {
-            disablePlayback('Security violation detected');
-            clearInterval(securityInterval);
-        }
-    }, 1000);
 }
 
 function updateVideoInfo(video) {
