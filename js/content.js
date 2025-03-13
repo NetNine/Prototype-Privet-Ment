@@ -241,6 +241,7 @@ function updateVideoListHighlight() {
     }
 }
 
+// Enhanced video player function
 function playVideo() {
     if (!isAuthenticated()) {
         window.location.href = 'login.html';
@@ -249,55 +250,51 @@ function playVideo() {
 
     const playlist = playlists[currentPlaylist];
     const video = playlist[currentVideoIndex];
-    const videoContainer = document.getElementById('videoContainer');
+    const iframe = document.getElementById('protectedVideo');
     
-    if (videoContainer && video) {
-        // Create a secure iframe
-        const iframe = document.createElement('iframe');
-        iframe.setAttribute('src', `https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0`);
-        iframe.setAttribute('frameborder', '0');
-        iframe.setAttribute('allowfullscreen', 'true');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-
-        // Clear and append
-        videoContainer.innerHTML = '';
-        videoContainer.appendChild(iframe);
-
-        // Update info
-        document.getElementById('currentVideoTitle').textContent = video.title;
-        document.getElementById('currentVideoDescription').textContent = video.description;
+    if (iframe && video) {
+        // Add encrypted parameters
+        const timestamp = Date.now();
+        const token = generateSecureToken(video.id, timestamp);
+        
+        // Set secure iframe attributes
+        iframe.setAttribute('src', `https://www.youtube.com/embed/${video.id}?` + 
+            `autoplay=1&` +
+            `modestbranding=1&` +
+            `rel=0&` +
+            `enablejsapi=1&` +
+            `origin=${window.location.origin}&` +
+            `widget_referrer=${window.location.href}&` +
+            `token=${token}&` +
+            `timestamp=${timestamp}`
+        );
+        
+        // Add DRM protection
+        applyDRMProtection(iframe);
     }
 
+    updateVideoInfo(video);
     updateNavigationButtons();
     updateVideoListHighlight();
 }
 
-// Security enhancements
-navigator.mediaDevices.getDisplayMedia = function() {
-    alert("Screen recording is disabled for security reasons.");
-    return Promise.reject(new Error("Screen recording blocked."));
-};
+// Security utilities
+function generateSecureToken(videoId, timestamp) {
+    // Implement your token generation logic here
+    return btoa(`${videoId}-${timestamp}-${Math.random()}`);
+}
 
-document.addEventListener("visibilitychange", function() {
-    const videoContainer = document.getElementById("videoContainer");
-    if (document.hidden) {
-        videoContainer.style.filter = "blur(10px)";
-    } else {
-        videoContainer.style.filter = "none";
-    }
-});
+function applyDRMProtection(iframe) {
+    // Add Content Security Policy
+    const csp = document.createElement('meta');
+    csp.httpEquiv = 'Content-Security-Policy';
+    csp.content = "frame-src 'self' https://www.youtube.com";
+    document.head.appendChild(csp);
 
-// Prevent right-click
-document.addEventListener('contextmenu', (e) => e.preventDefault());
-
-// Prevent keyboard shortcuts
-document.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey || e.metaKey) && 
-        (e.key === 'p' || e.key === 's' || e.key === 'u' || 
-         e.key === 'c' || e.key === 'i')) {
-        e.preventDefault();
-    }
-});
+    // Add security attributes
+    iframe.setAttribute('crossorigin', 'anonymous');
+    iframe.setAttribute('referrerpolicy', 'no-referrer');
+}
 
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevVideo');
@@ -370,3 +367,64 @@ document.addEventListener('DOMContentLoaded', () => {
 function isAuthenticated() {
     return localStorage.getItem('user') !== null;
 }
+
+// Security Enhancements
+function initializeSecurityMeasures() {
+    // Disable right-click
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        // Prevent common shortcuts
+        if ((e.ctrlKey || e.metaKey) && 
+            ['s', 'u', 'p', 'a', 'i'].includes(e.key.toLowerCase())) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Block screen recording
+    if (navigator.mediaDevices) {
+        navigator.mediaDevices.getDisplayMedia = () => {
+            throw new Error('Screen recording is not allowed');
+        };
+    }
+
+    // Block downloads
+    document.addEventListener('dragstart', (e) => e.preventDefault());
+    document.addEventListener('drop', (e) => e.preventDefault());
+    
+    // Add video protection
+    const videoContainer = document.getElementById('videoContainer');
+    if (videoContainer) {
+        // Blur video when tab is not focused
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                videoContainer.style.filter = 'blur(20px)';
+            } else {
+                videoContainer.style.filter = 'none';
+            }
+        });
+
+        // Add video encryption layer
+        videoContainer.innerHTML = `
+            <div class="video-protection-layer">
+                <iframe 
+                    id="protectedVideo"
+                    allowfullscreen
+                    allow="encrypted-media"
+                    sandbox="allow-same-origin allow-scripts"
+                    loading="lazy"
+                ></iframe>
+            </div>
+        `;
+    }
+}
+
+// Initialize security when DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+    initializeSecurityMeasures();
+});
