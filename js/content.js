@@ -514,7 +514,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Content page specific code
     setupVideoPlayer();
-    loadVideoList();
+    createVideoList(); // Ensure video list is created after DOM is loaded
+    playVideo(); // Play first video
 });
 
 function initializeNavigation() {
