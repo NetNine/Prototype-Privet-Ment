@@ -254,7 +254,7 @@ function playVideo() {
     if (videoContainer && video) {
         // Create a secure iframe
         const iframe = document.createElement('iframe');
-        iframe.setAttribute('src', `https://iframe.mediadelivery.net/play/395738/${video.id}?autoplay=1&modestbranding=1&rel=0`);
+        iframe.setAttribute('src', `https://iframe.mediadelivery.net/embed/395738/${video.id}?autoplay=true&loop=false&muted=false&preload=true&responsive=true`);
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allowfullscreen', 'true');
         iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
