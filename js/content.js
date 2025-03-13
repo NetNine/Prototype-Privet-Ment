@@ -258,7 +258,7 @@ function playVideo() {
                 <div class="video-frame">
                     <iframe 
                         id="protectedVideo"
-                        src="https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&disablekb=1"
+                        src="https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&disablekb=1"
                         allow="encrypted-media; accelerometer; gyroscope"
                         sandbox="allow-same-origin allow-scripts allow-presentation"
                         loading="lazy"
