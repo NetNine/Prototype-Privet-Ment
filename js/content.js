@@ -253,29 +253,36 @@ function playVideo() {
     const videoContainer = document.getElementById('videoContainer');
     
     if (videoContainer && video) {
-        // Create encrypted wrapper with protection layers
+        // Enhanced secure player with additional protections
         const securePlayer = `
-            <div class="video-protection-layer" id="videoWrapper">
-                <div class="protection-overlay"></div>
-                <iframe 
-                    id="protectedVideo"
-                    src="https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=0"
-                    allow="encrypted-media"
-                    sandbox="allow-same-origin allow-scripts allow-presentation"
-                    loading="lazy"
-                    oncontextmenu="return false;"
-                ></iframe>
-                <div class="watermark" id="dynamicWatermark"></div>
+            <div class="video-shield">
+                <div class="video-protection-layer" id="videoWrapper">
+                    <div class="protection-overlay"></div>
+                    <div class="proxy-player" id="proxyPlayer">
+                        <iframe 
+                            id="protectedVideo"
+                            src="https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&fs=0"
+                            allow="encrypted-media; accelerometer; gyroscope; picture-in-picture"
+                            sandbox="allow-same-origin allow-scripts allow-presentation"
+                            loading="lazy"
+                        ></iframe>
+                    </div>
+                    <div class="watermark" id="dynamicWatermark"></div>
+                </div>
             </div>
         `;
         
         videoContainer.innerHTML = securePlayer;
-        
-        // Apply additional protections
         applyVideoProtection();
     }
 
-    updateVideoInfo(video);
+    // Update video info
+    const titleElement = document.getElementById('currentVideoTitle');
+    const descElement = document.getElementById('currentVideoDescription');
+    
+    if (titleElement) titleElement.textContent = video.title;
+    if (descElement) descElement.textContent = video.description;
+
     updateNavigationButtons();
     updateVideoListHighlight();
 }
