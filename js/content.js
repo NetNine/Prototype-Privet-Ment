@@ -150,7 +150,7 @@ const coreContent = [
 // Goldbach Content Videos
 const goldbachContent = [
     {
-        id: '258fb0f7-006b-4700-907e-939b7931340c',
+        id: '8ViXsAPQWXk',
         title: 'Introduction to GB Book PART 01',
         description: 'Foundation concepts of Goldbach trading.'
     },
@@ -254,7 +254,7 @@ function playVideo() {
     if (videoContainer && video) {
         // Create a secure iframe
         const iframe = document.createElement('iframe');
-        iframe.setAttribute('src', `https://iframe.mediadelivery.net/embed/395738/${video.id}?autoplay=true&loop=false&muted=false&preload=true&responsive=true`);
+        iframe.setAttribute('src', `https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0`);
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allowfullscreen', 'true');
         iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
