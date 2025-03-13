@@ -262,8 +262,8 @@ function playVideo() {
                         <iframe 
                             id="protectedVideo"
                             src="https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&fs=0"
-                            allow="encrypted-media; accelerometer; gyroscope; picture-in-picture"
-                            sandbox="allow-same-origin allow-scripts allow-presentation"
+                            allow="encrypted-media; accelerometer; gyroscope; picture-in-picture; clipboard-write"
+                            sandbox="allow-same-origin allow-scripts allow-presentation allow-downloads"
                             loading="lazy"
                         ></iframe>
                     </div>
@@ -307,6 +307,34 @@ function applyVideoProtection() {
         wrapper.addEventListener('contextmenu', e => e.preventDefault());
         wrapper.addEventListener('keydown', e => {
             if (e.ctrlKey || e.metaKey) e.preventDefault();
+        });
+
+        // Disable right-click
+        wrapper.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Disable common download shortcuts
+        wrapper.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && ['s', 'u', 'p', 'a', 'i'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+            }
+        });
+
+        // Block screen recording
+        if (navigator.mediaDevices) {
+            navigator.mediaDevices.getDisplayMedia = () => {
+                throw new Error('Screen recording is not allowed');
+            };
+        }
+
+        // Blur video when tab is not focused
+        document.addEventListener('visibilitychange', () => {
+            const iframe = document.getElementById('protectedVideo');
+            if (document.hidden && iframe) {
+                iframe.style.filter = 'blur(20px)';
+                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            } else if (iframe) {
+                iframe.style.filter = 'none';
+            }
         });
     }
 
