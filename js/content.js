@@ -323,6 +323,89 @@ function applyVideoProtection() {
     });
 }
 
+// Add video controls
+function addVideoControls() {
+    const videoContainer = document.getElementById('videoContainer');
+    if (videoContainer) {
+        const controls = `
+            <div class="video-controls">
+                <button id="playPauseBtn">Play/Pause</button>
+                <button id="muteBtn">Mute/Unmute</button>
+                <button id="skipBackBtn">-10s</button>
+                <button id="skipForwardBtn">+10s</button>
+                <label for="speedControl">Speed:</label>
+                <select id="speedControl">
+                    <option value="0.5">0.5x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                </select>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
+                <input type="range" id="seekBar" value="0">
+            </div>
+        `;
+        videoContainer.insertAdjacentHTML('beforeend', controls);
+
+        const iframe = document.getElementById('protectedVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const skipBackBtn = document.getElementById('skipBackBtn');
+        const skipForwardBtn = document.getElementById('skipForwardBtn');
+        const speedControl = document.getElementById('speedControl');
+        const volumeControl = document.getElementById('volumeControl');
+        const seekBar = document.getElementById('seekBar');
+
+        playPauseBtn.addEventListener('click', () => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"playPauseVideo","args":""}', '*');
+        });
+
+        muteBtn.addEventListener('click', () => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"muteUnmuteVideo","args":""}', '*');
+        });
+
+        skipBackBtn.addEventListener('click', () => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"seekBy","args":["-10"]}', '*');
+        });
+
+        skipForwardBtn.addEventListener('click', () => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"seekBy","args":["10"]}', '*');
+        });
+
+        speedControl.addEventListener('change', () => {
+            iframe.contentWindow.postMessage(`{"event":"command","func":"setPlaybackRate","args":["${speedControl.value}"]}`, '*');
+        });
+
+        volumeControl.addEventListener('input', () => {
+            iframe.contentWindow.postMessage(`{"event":"command","func":"setVolume","args":["${volumeControl.value * 100}"]}`, '*');
+        });
+
+        seekBar.addEventListener('input', () => {
+            iframe.contentWindow.postMessage(`{"event":"command","func":"seekTo","args":["${seekBar.value}"]}`, '*');
+        });
+
+        // Update seek bar as video plays
+        setInterval(() => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"getCurrentTime","args":""}', '*');
+        }, 1000);
+
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.event === 'infoDelivery' && event.data.info) {
+                if (event.data.info.currentTime) {
+                    seekBar.value = event.data.info.currentTime;
+                }
+                if (event.data.info.duration) {
+                    seekBar.max = event.data.info.duration;
+                }
+            }
+        });
+    }
+}
+
+// Initialize video controls when DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+    addVideoControls();
+});
+
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevVideo');
     const nextBtn = document.getElementById('nextVideo');
