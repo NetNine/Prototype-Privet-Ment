@@ -255,23 +255,18 @@ function playVideo() {
     if (videoContainer && video) {
         const securePlayerTemplate = `
             <div class="video-shield" id="secureWrapper">
-                <div class="encryption-layer">
-                    <div class="anti-capture-overlay"></div>
-                    <div class="video-frame">
-                        <iframe 
-                            id="protectedVideo"
-                            src="https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&disablekb=1"
-                            allow="encrypted-media; accelerometer; gyroscope"
-                            sandbox="allow-same-origin allow-scripts allow-presentation"
-                            loading="lazy"
-                            oncontextmenu="return false;"
-                        ></iframe>
-                    </div>
-                    <div class="encryption-grid"></div>
-                    <div class="multi-layer-watermark">
-                        <div class="watermark-primary" id="dynamicWatermark"></div>
-                        <div class="watermark-secondary"></div>
-                    </div>
+                <div class="video-frame">
+                    <iframe 
+                        id="protectedVideo"
+                        src="https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&disablekb=1"
+                        allow="encrypted-media; accelerometer; gyroscope"
+                        sandbox="allow-same-origin allow-scripts allow-presentation"
+                        loading="lazy"
+                        oncontextmenu="return false;"
+                    ></iframe>
+                </div>
+                <div class="multi-layer-watermark">
+                    <div class="watermark-primary" id="dynamicWatermark"></div>
                 </div>
             </div>
         `;
@@ -295,37 +290,15 @@ function applyAdvancedProtection() {
         window.top.location.href = window.self.location.href;
     }
 
-    // Enhanced encryption layer
-    const addEncryptionLayer = () => {
-        const grid = document.querySelector('.encryption-grid');
-        const timestamp = Date.now();
-        const encryptionKey = btoa(`${userId}-${timestamp}`);
-        
-        for (let i = 0; i < 200; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'encryption-cell';
-            cell.dataset.key = encryptionKey.substr(i % 32, 8);
-            grid.appendChild(cell);
-        }
-    };
-
     // Advanced watermarking
     const applyWatermark = () => {
         const watermark = document.getElementById('dynamicWatermark');
-        const secondaryWatermark = document.querySelector('.watermark-secondary');
         
         setInterval(() => {
             const timestamp = new Date().toISOString();
             const position = `${Math.random() * 90}% ${Math.random() * 90}%`;
             watermark.textContent = `${userId} | ${timestamp}`;
             watermark.style.transform = `translate(${position}) rotate(${Math.random() * 360}deg)`;
-            
-            secondaryWatermark.style.backgroundImage = 
-                `repeating-linear-gradient(45deg, 
-                    rgba(0,255,169,0.1) 0px, 
-                    transparent 2px, 
-                    transparent 4px
-                )`;
         }, 1000);
     };
 
@@ -352,7 +325,6 @@ function applyAdvancedProtection() {
     };
 
     // Initialize all protections
-    addEncryptionLayer();
     applyWatermark();
     blockDownloads();
 }

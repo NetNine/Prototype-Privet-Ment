@@ -492,6 +492,35 @@ body {
     overflow: hidden;
 }
 
+.video-frame {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.video-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.multi-layer-watermark {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.watermark-primary {
+    position: absolute;
+    font-family: monospace;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.15);
+    text-shadow: 0 0 2px rgba(0, 255, 169, 0.5);
+    white-space: nowrap;
+    transition: all 0.5s ease;
+}
+
 .encryption-layer {
     position: absolute;
     inset: 0;
