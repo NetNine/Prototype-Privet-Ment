@@ -250,27 +250,29 @@ function playVideo() {
 
     const playlist = playlists[currentPlaylist];
     const video = playlist[currentVideoIndex];
-    const iframe = document.getElementById('protectedVideo');
+    const videoContainer = document.getElementById('videoContainer');
     
-    if (iframe && video) {
-        // Add encrypted parameters
-        const timestamp = Date.now();
-        const token = generateSecureToken(video.id, timestamp);
+    if (videoContainer && video) {
+        // Create encrypted wrapper with protection layers
+        const securePlayer = `
+            <div class="video-protection-layer" id="videoWrapper">
+                <div class="protection-overlay"></div>
+                <iframe 
+                    id="protectedVideo"
+                    src="https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=0"
+                    allow="encrypted-media"
+                    sandbox="allow-same-origin allow-scripts allow-presentation"
+                    loading="lazy"
+                    oncontextmenu="return false;"
+                ></iframe>
+                <div class="watermark" id="dynamicWatermark"></div>
+            </div>
+        `;
         
-        // Set secure iframe attributes
-        iframe.setAttribute('src', `https://www.youtube.com/embed/${video.id}?` + 
-            `autoplay=1&` +
-            `modestbranding=1&` +
-            `rel=0&` +
-            `enablejsapi=1&` +
-            `origin=${window.location.origin}&` +
-            `widget_referrer=${window.location.href}&` +
-            `token=${token}&` +
-            `timestamp=${timestamp}`
-        );
+        videoContainer.innerHTML = securePlayer;
         
-        // Add DRM protection
-        applyDRMProtection(iframe);
+        // Apply additional protections
+        applyVideoProtection();
     }
 
     updateVideoInfo(video);
@@ -278,22 +280,40 @@ function playVideo() {
     updateVideoListHighlight();
 }
 
-// Security utilities
-function generateSecureToken(videoId, timestamp) {
-    // Implement your token generation logic here
-    return btoa(`${videoId}-${timestamp}-${Math.random()}`);
-}
+function applyVideoProtection() {
+    // Add dynamic watermark
+    const watermark = document.getElementById('dynamicWatermark');
+    const userId = localStorage.getItem('user');
+    if (watermark && userId) {
+        setInterval(() => {
+            watermark.textContent = `${userId} - ${new Date().toISOString()}`;
+            watermark.style.top = `${Math.random() * 90}%`;
+            watermark.style.left = `${Math.random() * 90}%`;
+        }, 3000);
+    }
 
-function applyDRMProtection(iframe) {
-    // Add Content Security Policy
-    const csp = document.createElement('meta');
-    csp.httpEquiv = 'Content-Security-Policy';
-    csp.content = "frame-src 'self' https://www.youtube.com";
-    document.head.appendChild(csp);
+    // Add protection layer
+    const wrapper = document.getElementById('videoWrapper');
+    if (wrapper) {
+        wrapper.addEventListener('selectstart', e => e.preventDefault());
+        wrapper.addEventListener('dragstart', e => e.preventDefault());
+        wrapper.addEventListener('contextmenu', e => e.preventDefault());
+        wrapper.addEventListener('keydown', e => {
+            if (e.ctrlKey || e.metaKey) e.preventDefault();
+        });
+    }
 
-    // Add security attributes
-    iframe.setAttribute('crossorigin', 'anonymous');
-    iframe.setAttribute('referrerpolicy', 'no-referrer');
+    // Handle visibility change
+    document.addEventListener('visibilitychange', () => {
+        const iframe = document.getElementById('protectedVideo');
+        if (document.hidden && iframe) {
+            iframe.style.filter = 'blur(20px)';
+            // Optionally pause the video when tab is not active
+            iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        } else if (iframe) {
+            iframe.style.filter = 'none';
+        }
+    });
 }
 
 function updateNavigationButtons() {
