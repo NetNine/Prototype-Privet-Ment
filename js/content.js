@@ -566,3 +566,91 @@ function initializeSecurityMeasures() {
 document.addEventListener('DOMContentLoaded', () => {
     initializeSecurityMeasures();
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Block IDM & Download Extensions
+    function blockIDM() {
+        let idmDetected = false;
+
+        // Create a hidden request to check for IDM interference
+        const fakeRequest = new XMLHttpRequest();
+        fakeRequest.open('HEAD', 'https://fake-url-to-trigger-idm.com/test.mp4', true);
+        fakeRequest.onreadystatechange = function () {
+            if (fakeRequest.readyState === 4 && fakeRequest.status === 200) {
+                idmDetected = true;
+                alert("🚨 IDM or a download extension detected! Please disable it to access the content.");
+                document.body.innerHTML = "<h1>🚫 Access Denied: Disable Download Extensions</h1>";
+            }
+        };
+        fakeRequest.send();
+
+        // Detect browser extension changes
+        setInterval(() => {
+            const detectedExtensions = ['idm', 'video downloader', 'download manager', 'video capture'];
+            const installedExtensions = navigator.plugins;
+            for (let i = 0; i < installedExtensions.length; i++) {
+                let plugin = installedExtensions[i].name.toLowerCase();
+                detectedExtensions.forEach(ext => {
+                    if (plugin.includes(ext)) {
+                        idmDetected = true;
+                    }
+                });
+            }
+            if (idmDetected) {
+                alert("⚠️ Please disable IDM or any download extensions.");
+                document.body.innerHTML = "<h1>🚫 Downloading is blocked</h1>";
+            }
+        }, 5000);
+    }
+
+    // Block common download shortcuts & inspect element
+    function blockShortcuts() {
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (
+                (e.ctrlKey && (e.key === 's' || e.key === 'u' || e.key === 'p' || e.key === 'i' || e.key === 'j')) || 
+                (e.metaKey && (e.key === 's' || e.key === 'u' || e.key === 'p' || e.key === 'i' || e.key === 'j')) || 
+                e.key === 'F12'
+            ) {
+                alert("🔒 Inspecting is disabled for security reasons.");
+                e.preventDefault();
+            }
+        });
+    }
+
+    // Detect extensions that modify video elements (IDM, Video DownloadHelper, etc.)
+    function detectDownloadExtensions() {
+        setInterval(() => {
+            let suspiciousElements = document.querySelectorAll('[download], [id*="download"], [class*="download"]');
+            if (suspiciousElements.length > 0) {
+                alert("🚫 Download attempt detected! Disabling access.");
+                document.body.innerHTML = "<h1>⚠️ Downloading is not allowed</h1>";
+            }
+        }, 2000);
+    }
+
+    // Block known video download extensions by checking injected scripts
+    function detectMaliciousExtensions() {
+        setInterval(() => {
+            let extensions = ['idm', 'download', 'video saver', 'video downloader', 'capture', 'record'];
+            let scripts = document.querySelectorAll('script[src]');
+            scripts.forEach(script => {
+                extensions.forEach(ext => {
+                    if (script.src.toLowerCase().includes(ext)) {
+                        alert("⚠️ A download extension was detected. Please disable it.");
+                        document.body.innerHTML = "<h1>⚠️ Unauthorized extension detected</h1>";
+                    }
+                });
+            });
+        }, 5000);
+    }
+
+    // Initialize Security Features
+    blockIDM();
+    blockShortcuts();
+    detectDownloadExtensions();
+    detectMaliciousExtensions();
+});
