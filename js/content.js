@@ -654,3 +654,133 @@ document.addEventListener('DOMContentLoaded', function () {
     detectDownloadExtensions();
     detectMaliciousExtensions();
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const videoContainer = document.getElementById('videoContainer');
+    const userId = localStorage.getItem('user') || "Guest";
+
+    // Load Secure Video
+    function loadSecureVideo(videoId) {
+        if (!isAuthenticated()) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (videoContainer) {
+            videoContainer.innerHTML = `
+                <div class="video-security-layer">
+                    <iframe 
+                        id="secureVideo"
+                        src="https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=0&fs=0"
+                        allow="encrypted-media; accelerometer; gyroscope; clipboard-write"
+                        sandbox="allow-same-origin allow-scripts"
+                        loading="lazy"
+                    ></iframe>
+                    <div id="dynamicWatermark"></div>
+                </div>
+            `;
+        }
+        applySecurityMeasures();
+    }
+
+    // Check if user is authenticated
+    function isAuthenticated() {
+        return localStorage.getItem('user') !== null;
+    }
+
+    // Apply Security Measures
+    function applySecurityMeasures() {
+        const watermark = document.getElementById('dynamicWatermark');
+        const iframe = document.getElementById('secureVideo');
+
+        // Dynamic Watermark to Prevent Screen Recording
+        if (watermark) {
+            setInterval(() => {
+                watermark.textContent = `${userId} - ${new Date().toISOString()}`;
+                watermark.style.top = `${Math.random() * 90}%`;
+                watermark.style.left = `${Math.random() * 90}%`;
+            }, 3000);
+        }
+
+        // Prevent Right-Click & Copy
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (
+                (e.ctrlKey && ['s', 'u', 'p', 'i', 'j'].includes(e.key.toLowerCase())) || 
+                e.key === 'F12'
+            ) {
+                alert("🔒 Inspecting is disabled for security reasons.");
+                e.preventDefault();
+            }
+        });
+
+        // Block Video Download Extensions & IDM
+        detectDownloadExtensions();
+
+        // Prevent Screen Recording (Blur Video When Suspicious)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                iframe.style.filter = 'blur(30px)';
+                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            } else {
+                iframe.style.filter = 'none';
+            }
+        });
+
+        // Block IDM Network Interception
+        detectIDM();
+    }
+
+    // Block IDM & Video Download Extensions
+    function detectIDM() {
+        let idmDetected = false;
+
+        // Fake Request to Trigger IDM Detection
+        const fakeRequest = new XMLHttpRequest();
+        fakeRequest.open('HEAD', 'https://fake-url-to-trigger-idm.com/test.mp4', true);
+        fakeRequest.onreadystatechange = function () {
+            if (fakeRequest.readyState === 4 && fakeRequest.status === 200) {
+                idmDetected = true;
+                alert("🚨 IDM or a download extension detected! Please disable it to access the content.");
+                document.body.innerHTML = "<h1>🚫 Access Denied: Disable Download Extensions</h1>";
+            }
+        };
+        fakeRequest.send();
+
+        // Detect Browser Extensions
+        setInterval(() => {
+            const detectedExtensions = ['idm', 'video downloader', 'download manager', 'video capture'];
+            const installedExtensions = navigator.plugins;
+            for (let i = 0; i < installedExtensions.length; i++) {
+                let plugin = installedExtensions[i].name.toLowerCase();
+                detectedExtensions.forEach(ext => {
+                    if (plugin.includes(ext)) {
+                        idmDetected = true;
+                    }
+                });
+            }
+            if (idmDetected) {
+                alert("⚠️ Please disable IDM or any download extensions.");
+                document.body.innerHTML = "<h1>🚫 Downloading is blocked</h1>";
+            }
+        }, 5000);
+    }
+
+    // Detect Extensions Trying to Modify Video Elements
+    function detectDownloadExtensions() {
+        setInterval(() => {
+            let suspiciousElements = document.querySelectorAll('[download], [id*="download"], [class*="download"]');
+            if (suspiciousElements.length > 0) {
+                alert("🚫 Download attempt detected! Disabling access.");
+                document.body.innerHTML = "<h1>⚠️ Downloading is not allowed</h1>";
+            }
+        }, 2000);
+    }
+
+    // Load First Video Securely
+    loadSecureVideo('8ViXsAPQWXk'); // Replace with actual video ID
+
+});
