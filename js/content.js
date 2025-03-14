@@ -253,149 +253,38 @@ function playVideo() {
     const videoContainer = document.getElementById('videoContainer');
     
     if (videoContainer && video) {
-        const securePlayerTemplate = `
-            <div class="video-shield" id="secureWrapper">
-                <div class="encryption-layer">
-                    <div class="anti-capture-overlay"></div>
-                    <div class="video-frame">
+        // Enhanced secure player with additional protections
+        const securePlayer = `
+            <div class="video-shield">
+                <div class="video-protection-layer" id="videoWrapper">
+                    <div class="protection-overlay"></div>
+                    <div class="proxy-player" id="proxyPlayer">
                         <iframe 
                             id="protectedVideo"
-                            src="https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&disablekb=1"
-                            allow="encrypted-media; accelerometer; gyroscope"
-                            sandbox="allow-same-origin allow-scripts allow-presentation"
+                            src="https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&fs=0"
+                            allow="encrypted-media; accelerometer; gyroscope; picture-in-picture; clipboard-write"
+                            sandbox="allow-same-origin allow-scripts allow-presentation allow-downloads"
                             loading="lazy"
-                            oncontextmenu="return false;"
                         ></iframe>
                     </div>
-                    <div class="encryption-grid"></div>
-                    <div class="multi-layer-watermark">
-                        <div class="watermark-primary" id="dynamicWatermark"></div>
-                        <div class="watermark-secondary"></div>
-                    </div>
+                    <div class="watermark" id="dynamicWatermark"></div>
                 </div>
             </div>
         `;
         
-        videoContainer.innerHTML = securePlayerTemplate;
-        applyAdvancedProtection();
-    }
-    
-    updateVideoInfo(video);
-    updateNavigationButtons();
-    updateVideoListHighlight();
-}
-
-function applyAdvancedProtection() {
-    const wrapper = document.getElementById('secureWrapper');
-    const iframe = document.getElementById('protectedVideo');
-    const userId = localStorage.getItem('user');
-
-    // Frame busting code
-    if (window.top !== window.self) {
-        window.top.location.href = window.self.location.href;
+        videoContainer.innerHTML = securePlayer;
+        applyVideoProtection();
     }
 
-    // Detect and block browser extensions
-    const detectExtensions = () => {
-        const extensionDetector = document.createElement('div');
-        extensionDetector.setAttribute('id', '__idm_helper');
-        document.body.appendChild(extensionDetector);
-        
-        setTimeout(() => {
-            if (window.__IDM__ || 
-                extensionDetector.offsetHeight !== undefined || 
-                document.querySelector('[class*="idm"]')) {
-                disablePlayback('Download extensions detected');
-            }
-            extensionDetector.remove();
-        }, 100);
-    };
-
-    // Enhanced encryption layer
-    const addEncryptionLayer = () => {
-        const grid = document.querySelector('.encryption-grid');
-        const timestamp = Date.now();
-        const encryptionKey = btoa(`${userId}-${timestamp}`);
-        
-        for (let i = 0; i < 200; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'encryption-cell';
-            cell.dataset.key = encryptionKey.substr(i % 32, 8);
-            grid.appendChild(cell);
-        }
-    };
-
-    // Advanced watermarking
-    const applyWatermark = () => {
-        const watermark = document.getElementById('dynamicWatermark');
-        const secondaryWatermark = document.querySelector('.watermark-secondary');
-        
-        setInterval(() => {
-            const timestamp = new Date().toISOString();
-            const position = `${Math.random() * 90}% ${Math.random() * 90}%`;
-            watermark.textContent = `${userId} | ${timestamp}`;
-            watermark.style.transform = `translate(${position}) rotate(${Math.random() * 360}deg)`;
-            
-            secondaryWatermark.style.backgroundImage = 
-                `repeating-linear-gradient(45deg, 
-                    rgba(0,255,169,0.1) 0px, 
-                    transparent 2px, 
-                    transparent 4px
-                )`;
-        }, 1000);
-    };
-
-    // Block video download attempts
-    const blockDownloads = () => {
-        const preventAction = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        };
-
-        wrapper.addEventListener('contextmenu', preventAction, true);
-        wrapper.addEventListener('dragstart', preventAction, true);
-        wrapper.addEventListener('selectstart', preventAction, true);
-        wrapper.addEventListener('copy', preventAction, true);
-        
-        // Block common download key combinations
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && 
-                ['s', 'u', 'p', 'a', 'i', 'c'].includes(e.key.toLowerCase())) {
-                preventAction(e);
-            }
-        }, true);
-    };
-
-    // Disable playback if tampering detected
-    const disablePlayback = (reason) => {
-        iframe.src = '';
-        wrapper.innerHTML = `<div class="security-alert">Playback disabled: ${reason}</div>`;
-    };
-
-    // Initialize all protections
-    detectExtensions();
-    addEncryptionLayer();
-    applyWatermark();
-    blockDownloads();
-
-    // Monitor for tampering attempts
-    const securityInterval = setInterval(() => {
-        if (!document.contains(iframe) || 
-            iframe.src.includes('download') ||
-            wrapper.style.visibility === 'hidden') {
-            disablePlayback('Security violation detected');
-            clearInterval(securityInterval);
-        }
-    }, 1000);
-}
-
-function updateVideoInfo(video) {
+    // Update video info
     const titleElement = document.getElementById('currentVideoTitle');
     const descElement = document.getElementById('currentVideoDescription');
     
     if (titleElement) titleElement.textContent = video.title;
     if (descElement) descElement.textContent = video.description;
+
+    updateNavigationButtons();
+    updateVideoListHighlight();
 }
 
 function applyVideoProtection() {
