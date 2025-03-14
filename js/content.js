@@ -253,116 +253,31 @@ function playVideo() {
     const videoContainer = document.getElementById('videoContainer');
     
     if (videoContainer && video) {
+        // Create encrypted wrapper with protection layers
         const securePlayer = `
-            <div class="video-security-wrapper" id="secureWrapper">
-                <div class="video-protection-layer">
-                    <div class="security-overlay"></div>
-                    <div class="video-proxy">
-                        <iframe 
-                            id="protectedVideo"
-                            src="https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&disablekb=1"
-                            allow="encrypted-media; accelerometer; gyroscope; picture-in-picture"
-                            sandbox="allow-same-origin allow-scripts allow-presentation"
-                            loading="lazy"
-                        ></iframe>
-                    </div>
-                    <div class="security-grid"></div>
-                    <div class="dynamic-watermark" id="dynamicWatermark"></div>
-                </div>
+            <div class="video-protection-layer" id="videoWrapper">
+                <div class="protection-overlay"></div>
+                <iframe 
+                    id="protectedVideo"
+                    src="https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=0"
+                    allow="encrypted-media"
+                    sandbox="allow-same-origin allow-scripts allow-presentation"
+                    loading="lazy"
+                    oncontextmenu="return false;"
+                ></iframe>
+                <div class="watermark" id="dynamicWatermark"></div>
             </div>
         `;
         
         videoContainer.innerHTML = securePlayer;
-        enhanceVideoSecurity();
+        
+        // Apply additional protections
+        applyVideoProtection();
     }
 
     updateVideoInfo(video);
     updateNavigationButtons();
     updateVideoListHighlight();
-}
-
-function enhanceVideoSecurity() {
-    const wrapper = document.getElementById('secureWrapper');
-    const iframe = document.getElementById('protectedVideo');
-    const watermark = document.getElementById('dynamicWatermark');
-    const userId = localStorage.getItem('user');
-    const grid = document.querySelector('.security-grid');
-
-    // Create security grid
-    if (grid) {
-        for (let i = 0; i < 100; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'grid-cell';
-            cell.innerHTML = `${userId}-${Math.random().toString(36).substr(2, 9)}`;
-            grid.appendChild(cell);
-        }
-    }
-
-    // Dynamic watermark
-    if (watermark && userId) {
-        setInterval(() => {
-            const timestamp = new Date().toISOString();
-            watermark.textContent = `${userId} | ${timestamp}`;
-            watermark.style.top = `${Math.random() * 90}%`;
-            watermark.style.left = `${Math.random() * 90}%`;
-            watermark.style.transform = `rotate(${Math.random() * 360}deg)`;
-        }, 2000);
-    }
-
-    // Enhanced security measures
-    if (wrapper && iframe) {
-        // Block download managers
-        const blockDownload = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        };
-
-        wrapper.addEventListener('contextmenu', blockDownload);
-        wrapper.addEventListener('dragstart', blockDownload);
-        wrapper.addEventListener('selectstart', blockDownload);
-        wrapper.addEventListener('copy', blockDownload);
-
-        // Tab visibility handling
-        let blurTimeout;
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                wrapper.classList.add('security-blur');
-                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-                blurTimeout = setTimeout(() => {
-                    iframe.style.visibility = 'hidden';
-                }, 1000);
-            } else {
-                clearTimeout(blurTimeout);
-                wrapper.classList.remove('security-blur');
-                iframe.style.visibility = 'visible';
-            }
-        });
-
-        // Screen recording detection
-        const detectScreenCapture = async () => {
-            try {
-                const stream = await navigator.mediaDevices.getDisplayMedia();
-                stream.getTracks().forEach(track => track.stop());
-                wrapper.classList.add('security-blur');
-                alert('Screen recording is not allowed');
-            } catch (err) {
-                console.log('Screen capture blocked');
-            }
-        };
-
-        if (navigator.mediaDevices) {
-            detectScreenCapture();
-        }
-    }
-}
-
-function updateVideoInfo(video) {
-    const titleElement = document.getElementById('currentVideoTitle');
-    const descElement = document.getElementById('currentVideoDescription');
-    
-    if (titleElement) titleElement.textContent = video.title;
-    if (descElement) descElement.textContent = video.description;
 }
 
 function applyVideoProtection() {
@@ -386,34 +301,6 @@ function applyVideoProtection() {
         wrapper.addEventListener('keydown', e => {
             if (e.ctrlKey || e.metaKey) e.preventDefault();
         });
-
-        // Disable right-click
-        wrapper.addEventListener('contextmenu', e => e.preventDefault());
-
-        // Disable common download shortcuts
-        wrapper.addEventListener('keydown', e => {
-            if ((e.ctrlKey || e.metaKey) && ['s', 'u', 'p', 'a', 'i'].includes(e.key.toLowerCase())) {
-                e.preventDefault();
-            }
-        });
-
-        // Block screen recording
-        if (navigator.mediaDevices) {
-            navigator.mediaDevices.getDisplayMedia = () => {
-                throw new Error('Screen recording is not allowed');
-            };
-        }
-
-        // Blur video when tab is not focused
-        document.addEventListener('visibilitychange', () => {
-            const iframe = document.getElementById('protectedVideo');
-            if (document.hidden && iframe) {
-                iframe.style.filter = 'blur(20px)';
-                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-            } else if (iframe) {
-                iframe.style.filter = 'none';
-            }
-        });
     }
 
     // Handle visibility change
@@ -428,89 +315,6 @@ function applyVideoProtection() {
         }
     });
 }
-
-// Add video controls
-function addVideoControls() {
-    const videoContainer = document.getElementById('videoContainer');
-    if (videoContainer) {
-        const controls = `
-            <div class="video-controls">
-                <button id="playPauseBtn">Play/Pause</button>
-                <button id="muteBtn">Mute/Unmute</button>
-                <button id="skipBackBtn">-10s</button>
-                <button id="skipForwardBtn">+10s</button>
-                <label for="speedControl">Speed:</label>
-                <select id="speedControl">
-                    <option value="0.5">0.5x</option>
-                    <option value="1" selected>1x</option>
-                    <option value="1.5">1.5x</option>
-                    <option value="2">2x</option>
-                </select>
-                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
-                <input type="range" id="seekBar" value="0">
-            </div>
-        `;
-        videoContainer.insertAdjacentHTML('beforeend', controls);
-
-        const iframe = document.getElementById('protectedVideo');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const muteBtn = document.getElementById('muteBtn');
-        const skipBackBtn = document.getElementById('skipBackBtn');
-        const skipForwardBtn = document.getElementById('skipForwardBtn');
-        const speedControl = document.getElementById('speedControl');
-        const volumeControl = document.getElementById('volumeControl');
-        const seekBar = document.getElementById('seekBar');
-
-        playPauseBtn.addEventListener('click', () => {
-            iframe.contentWindow.postMessage('{"event":"command","func":"playPauseVideo","args":""}', '*');
-        });
-
-        muteBtn.addEventListener('click', () => {
-            iframe.contentWindow.postMessage('{"event":"command","func":"muteUnmuteVideo","args":""}', '*');
-        });
-
-        skipBackBtn.addEventListener('click', () => {
-            iframe.contentWindow.postMessage('{"event":"command","func":"seekBy","args":["-10"]}', '*');
-        });
-
-        skipForwardBtn.addEventListener('click', () => {
-            iframe.contentWindow.postMessage('{"event":"command","func":"seekBy","args":["10"]}', '*');
-        });
-
-        speedControl.addEventListener('change', () => {
-            iframe.contentWindow.postMessage(`{"event":"command","func":"setPlaybackRate","args":["${speedControl.value}"]}`, '*');
-        });
-
-        volumeControl.addEventListener('input', () => {
-            iframe.contentWindow.postMessage(`{"event":"command","func":"setVolume","args":["${volumeControl.value * 100}"]}`, '*');
-        });
-
-        seekBar.addEventListener('input', () => {
-            iframe.contentWindow.postMessage(`{"event":"command","func":"seekTo","args":["${seekBar.value}"]}`, '*');
-        });
-
-        // Update seek bar as video plays
-        setInterval(() => {
-            iframe.contentWindow.postMessage('{"event":"command","func":"getCurrentTime","args":""}', '*');
-        }, 1000);
-
-        window.addEventListener('message', (event) => {
-            if (event.data && event.data.event === 'infoDelivery' && event.data.info) {
-                if (event.data.info.currentTime) {
-                    seekBar.value = event.data.info.currentTime;
-                }
-                if (event.data.info.duration) {
-                    seekBar.max = event.data.info.duration;
-                }
-            }
-        });
-    }
-}
-
-// Initialize video controls when DOM loads
-document.addEventListener('DOMContentLoaded', () => {
-    addVideoControls();
-});
 
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevVideo');
