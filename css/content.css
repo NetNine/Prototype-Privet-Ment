@@ -414,3 +414,69 @@ body {
         rgba(0, 255, 169, 0.05) 100%
     );
 }
+
+/* Enhanced Security Styles */
+.video-security-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    background: #000;
+    overflow: hidden;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.security-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg,
+        rgba(0, 255, 169, 0.02) 0%,
+        transparent 40%,
+        rgba(0, 215, 255, 0.02) 60%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+    animation: moveOverlay 10s linear infinite;
+}
+
+.security-grid {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0.03;
+}
+
+.grid-cell {
+    font-size: 8px;
+    color: var(--primary-color);
+    overflow: hidden;
+    white-space: nowrap;
+    transform: rotate(-45deg);
+}
+
+.dynamic-watermark {
+    position: absolute;
+    z-index: 4;
+    color: rgba(255, 255, 255, 0.15);
+    font-family: monospace;
+    font-size: 12px;
+    pointer-events: none;
+    text-shadow: 0 0 2px rgba(0, 255, 169, 0.5);
+    transition: all 0.5s ease;
+    white-space: nowrap;
+}
+
+.security-blur {
+    filter: blur(30px);
+}
+
+@keyframes moveOverlay {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(50%, 50%) rotate(360deg); }
+}
