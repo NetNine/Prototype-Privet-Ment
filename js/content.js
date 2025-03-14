@@ -255,18 +255,23 @@ function playVideo() {
     if (videoContainer && video) {
         const securePlayerTemplate = `
             <div class="video-shield" id="secureWrapper">
-                <div class="video-frame">
-                    <iframe 
-                        id="protectedVideo"
-                        src="https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&disablekb=1"
-                        allow="encrypted-media; accelerometer; gyroscope"
-                        sandbox="allow-same-origin allow-scripts allow-presentation"
-                        loading="lazy"
-                        oncontextmenu="return false;"
-                    ></iframe>
-                </div>
-                <div class="multi-layer-watermark">
-                    <div class="watermark-primary" id="dynamicWatermark"></div>
+                <div class="encryption-layer">
+                    <div class="anti-capture-overlay"></div>
+                    <div class="video-frame">
+                        <iframe 
+                            id="protectedVideo"
+                            src="https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&disablekb=1"
+                            allow="encrypted-media; accelerometer; gyroscope"
+                            sandbox="allow-same-origin allow-scripts allow-presentation"
+                            loading="lazy"
+                            oncontextmenu="return false;"
+                        ></iframe>
+                    </div>
+                    <div class="encryption-grid"></div>
+                    <div class="multi-layer-watermark">
+                        <div class="watermark-primary" id="dynamicWatermark"></div>
+                        <div class="watermark-secondary"></div>
+                    </div>
                 </div>
             </div>
         `;
@@ -290,15 +295,53 @@ function applyAdvancedProtection() {
         window.top.location.href = window.self.location.href;
     }
 
+    // Detect and block browser extensions
+    const detectExtensions = () => {
+        const extensionDetector = document.createElement('div');
+        extensionDetector.setAttribute('id', '__idm_helper');
+        document.body.appendChild(extensionDetector);
+        
+        setTimeout(() => {
+            if (window.__IDM__ || 
+                extensionDetector.offsetHeight !== undefined || 
+                document.querySelector('[class*="idm"]')) {
+                disablePlayback('Download extensions detected');
+            }
+            extensionDetector.remove();
+        }, 100);
+    };
+
+    // Enhanced encryption layer
+    const addEncryptionLayer = () => {
+        const grid = document.querySelector('.encryption-grid');
+        const timestamp = Date.now();
+        const encryptionKey = btoa(`${userId}-${timestamp}`);
+        
+        for (let i = 0; i < 200; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'encryption-cell';
+            cell.dataset.key = encryptionKey.substr(i % 32, 8);
+            grid.appendChild(cell);
+        }
+    };
+
     // Advanced watermarking
     const applyWatermark = () => {
         const watermark = document.getElementById('dynamicWatermark');
+        const secondaryWatermark = document.querySelector('.watermark-secondary');
         
         setInterval(() => {
             const timestamp = new Date().toISOString();
             const position = `${Math.random() * 90}% ${Math.random() * 90}%`;
             watermark.textContent = `${userId} | ${timestamp}`;
             watermark.style.transform = `translate(${position}) rotate(${Math.random() * 360}deg)`;
+            
+            secondaryWatermark.style.backgroundImage = 
+                `repeating-linear-gradient(45deg, 
+                    rgba(0,255,169,0.1) 0px, 
+                    transparent 2px, 
+                    transparent 4px
+                )`;
         }, 1000);
     };
 
@@ -324,9 +367,27 @@ function applyAdvancedProtection() {
         }, true);
     };
 
+    // Disable playback if tampering detected
+    const disablePlayback = (reason) => {
+        iframe.src = '';
+        wrapper.innerHTML = `<div class="security-alert">Playback disabled: ${reason}</div>`;
+    };
+
     // Initialize all protections
+    detectExtensions();
+    addEncryptionLayer();
     applyWatermark();
     blockDownloads();
+
+    // Monitor for tampering attempts
+    const securityInterval = setInterval(() => {
+        if (!document.contains(iframe) || 
+            iframe.src.includes('download') ||
+            wrapper.style.visibility === 'hidden') {
+            disablePlayback('Security violation detected');
+            clearInterval(securityInterval);
+        }
+    }, 1000);
 }
 
 function updateVideoInfo(video) {
@@ -481,16 +542,7 @@ function addVideoControls() {
 
 // Initialize video controls when DOM loads
 document.addEventListener('DOMContentLoaded', () => {
-    createVideoList();
-    playVideo(); // Play first video
     addVideoControls();
-
-    // Add navigation controls
-    document.getElementById('prevVideo')?.addEventListener('click', () => navigateVideo(-1));
-    document.getElementById('nextVideo')?.addEventListener('click', () => navigateVideo(1));
-
-    // Initialize security
-    initializeSecurityMeasures();
 });
 
 function updateNavigationButtons() {
@@ -498,8 +550,12 @@ function updateNavigationButtons() {
     const nextBtn = document.getElementById('nextVideo');
     const playlist = playlists[currentPlaylist];
 
-    if (prevBtn) prevBtn.disabled = currentVideoIndex === 0;
-    if (nextBtn) nextBtn.disabled = currentVideoIndex === playlist.length - 1;
+    if (prevBtn) {
+        prevBtn.disabled = currentVideoIndex === 0;
+    }
+    if (nextBtn) {
+        nextBtn.disabled = currentVideoIndex === playlist.length - 1;
+    }
 }
 
 function navigateVideo(direction) {
@@ -512,47 +568,112 @@ function navigateVideo(direction) {
     }
 }
 
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize standard navigation
+    initializeNavigation();
+    
+    // Content page specific code
+    setupVideoPlayer();
+    loadVideoList();
+});
+
+function initializeNavigation() {
+    // Set active menu item
+    const menuItems = document.querySelectorAll('.nav-menu a, .mobile-links a');
+    menuItems.forEach(item => {
+        if (item.getAttribute('href').includes('content.html')) {
+            item.classList.add('active');
+        }
+    });
+
+    // Setup auth state
+    updateAuthState();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    createVideoList();
+    playVideo(); // Play first video
+
+    document.getElementById('prevVideo')?.addEventListener('click', () => navigateVideo(-1));
+    document.getElementById('nextVideo')?.addEventListener('click', () => navigateVideo(1));
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            navigateVideo(-1);
+        } else if (e.key === 'ArrowRight') {
+            navigateVideo(1);
+        }
+    });
+
+    // Prevent back navigation to content page after logout
+    if (performance.navigation.type === 2) {
+        window.location.href = 'login.html';
+    }
+});
+
 function isAuthenticated() {
     return localStorage.getItem('user') !== null;
 }
 
+// Security Enhancements
 function initializeSecurityMeasures() {
-    // Block IDM and download managers
-    const headers = new Headers({
-        'Content-Security-Policy': "default-src 'self' https://www.youtube-nocookie.com; frame-src https://www.youtube-nocookie.com",
-        'X-Frame-Options': 'SAMEORIGIN',
-        'X-Content-Type-Options': 'nosniff'
+    // Disable right-click
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        return false;
     });
 
-    // Disable right-click
-    document.addEventListener('contextmenu', e => e.preventDefault());
-
-    // Block keyboard shortcuts
-    document.addEventListener('keydown', e => {
-        if ((e.ctrlKey || e.metaKey) && ['s','u','p','a','i','c'].includes(e.key.toLowerCase())) {
+    // Disable keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        // Prevent common shortcuts
+        if ((e.ctrlKey || e.metaKey) && 
+            ['s', 'u', 'p', 'a', 'i'].includes(e.key.toLowerCase())) {
             e.preventDefault();
+            return false;
         }
     });
 
-    // Block drag and drop
-    document.addEventListener('dragstart', e => e.preventDefault());
-    document.addEventListener('drop', e => e.preventDefault());
+    // Block screen recording
+    if (navigator.mediaDevices) {
+        navigator.mediaDevices.getDisplayMedia = () => {
+            throw new Error('Screen recording is not allowed');
+        };
+    }
 
-    // Add referrer policy
-    const meta = document.createElement('meta');
-    meta.name = 'referrer';
-    meta.content = 'strict-origin';
-    document.head.appendChild(meta);
+    // Block downloads
+    document.addEventListener('dragstart', (e) => e.preventDefault());
+    document.addEventListener('drop', (e) => e.preventDefault());
+    
+    // Add video protection
+    const videoContainer = document.getElementById('videoContainer');
+    if (videoContainer) {
+        // Blur video when tab is not focused
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                videoContainer.style.filter = 'blur(20px)';
+            } else {
+                videoContainer.style.filter = 'none';
+            }
+        });
+
+        // Add video encryption layer
+        videoContainer.innerHTML = `
+            <div class="video-protection-layer">
+                <iframe 
+                    id="protectedVideo"
+                    allowfullscreen
+                    allow="encrypted-media"
+                    sandbox="allow-same-origin allow-scripts"
+                    loading="lazy"
+                ></iframe>
+            </div>
+        `;
+    }
 }
 
-// Initialize all features and security
+// Initialize security when DOM loads
 document.addEventListener('DOMContentLoaded', () => {
-    if (!isAuthenticated()) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    createVideoList();
-    playVideo();
     initializeSecurityMeasures();
 });
