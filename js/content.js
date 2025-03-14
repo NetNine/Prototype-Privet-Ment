@@ -253,80 +253,108 @@ function playVideo() {
     const videoContainer = document.getElementById('videoContainer');
     
     if (videoContainer && video) {
-        const securePlayerTemplate = `
-            <div class="video-shield" id="secureWrapper">
-                <div class="video-frame">
-                    <iframe 
-                        id="protectedVideo"
-                        src="https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&disablekb=1"
-                        allow="encrypted-media; accelerometer; gyroscope"
-                        sandbox="allow-same-origin allow-scripts allow-presentation"
-                        loading="lazy"
-                        oncontextmenu="return false;"
-                    ></iframe>
-                </div>
-                <div class="multi-layer-watermark">
-                    <div class="watermark-primary" id="dynamicWatermark"></div>
+        const securePlayer = `
+            <div class="video-security-wrapper" id="secureWrapper">
+                <div class="video-protection-layer">
+                    <div class="security-overlay"></div>
+                    <div class="video-proxy">
+                        <iframe 
+                            id="protectedVideo"
+                            src="https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0&enablejsapi=1&origin=${window.location.origin}&controls=1&disablekb=1"
+                            allow="encrypted-media; accelerometer; gyroscope; picture-in-picture"
+                            sandbox="allow-same-origin allow-scripts allow-presentation"
+                            loading="lazy"
+                        ></iframe>
+                    </div>
+                    <div class="security-grid"></div>
+                    <div class="dynamic-watermark" id="dynamicWatermark"></div>
                 </div>
             </div>
         `;
         
-        videoContainer.innerHTML = securePlayerTemplate;
-        applyAdvancedProtection();
+        videoContainer.innerHTML = securePlayer;
+        enhanceVideoSecurity();
     }
-    
+
     updateVideoInfo(video);
     updateNavigationButtons();
     updateVideoListHighlight();
 }
 
-function applyAdvancedProtection() {
+function enhanceVideoSecurity() {
     const wrapper = document.getElementById('secureWrapper');
     const iframe = document.getElementById('protectedVideo');
+    const watermark = document.getElementById('dynamicWatermark');
     const userId = localStorage.getItem('user');
+    const grid = document.querySelector('.security-grid');
 
-    // Frame busting code
-    if (window.top !== window.self) {
-        window.top.location.href = window.self.location.href;
+    // Create security grid
+    if (grid) {
+        for (let i = 0; i < 100; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            cell.innerHTML = `${userId}-${Math.random().toString(36).substr(2, 9)}`;
+            grid.appendChild(cell);
+        }
     }
 
-    // Advanced watermarking
-    const applyWatermark = () => {
-        const watermark = document.getElementById('dynamicWatermark');
-        
+    // Dynamic watermark
+    if (watermark && userId) {
         setInterval(() => {
             const timestamp = new Date().toISOString();
-            const position = `${Math.random() * 90}% ${Math.random() * 90}%`;
             watermark.textContent = `${userId} | ${timestamp}`;
-            watermark.style.transform = `translate(${position}) rotate(${Math.random() * 360}deg)`;
-        }, 1000);
-    };
+            watermark.style.top = `${Math.random() * 90}%`;
+            watermark.style.left = `${Math.random() * 90}%`;
+            watermark.style.transform = `rotate(${Math.random() * 360}deg)`;
+        }, 2000);
+    }
 
-    // Block video download attempts
-    const blockDownloads = () => {
-        const preventAction = (e) => {
+    // Enhanced security measures
+    if (wrapper && iframe) {
+        // Block download managers
+        const blockDownload = (e) => {
             e.preventDefault();
             e.stopPropagation();
             return false;
         };
 
-        wrapper.addEventListener('contextmenu', preventAction, true);
-        wrapper.addEventListener('dragstart', preventAction, true);
-        wrapper.addEventListener('selectstart', preventAction, true);
-        wrapper.addEventListener('copy', preventAction, true);
-        
-        // Block common download key combinations
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && 
-                ['s', 'u', 'p', 'a', 'i', 'c'].includes(e.key.toLowerCase())) {
-                preventAction(e);
-            }
-        }, true);
-    };
+        wrapper.addEventListener('contextmenu', blockDownload);
+        wrapper.addEventListener('dragstart', blockDownload);
+        wrapper.addEventListener('selectstart', blockDownload);
+        wrapper.addEventListener('copy', blockDownload);
 
-    // Initialize all protections
-    applyWatermark();
-    blockDownloads();
+        // Tab visibility handling
+        let blurTimeout;
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                wrapper.classList.add('security-blur');
+                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                blurTimeout = setTimeout(() => {
+                    iframe.style.visibility = 'hidden';
+                }, 1000);
+            } else {
+                clearTimeout(blurTimeout);
+                wrapper.classList.remove('security-blur');
+                iframe.style.visibility = 'visible';
+            }
+        });
+
+        // Screen recording detection
+        const detectScreenCapture = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia();
+                stream.getTracks().forEach(track => track.stop());
+                wrapper.classList.add('security-blur');
+                alert('Screen recording is not allowed');
+            } catch (err) {
+                console.log('Screen capture blocked');
+            }
+        };
+
+        if (navigator.mediaDevices) {
+            detectScreenCapture();
+        }
+    }
 }
 
 function updateVideoInfo(video) {
@@ -354,11 +382,135 @@ function applyVideoProtection() {
     if (wrapper) {
         wrapper.addEventListener('selectstart', e => e.preventDefault());
         wrapper.addEventListener('dragstart', e => e.preventDefault());
+        wrapper.addEventListener('contextmenu', e => e.preventDefault());
         wrapper.addEventListener('keydown', e => {
             if (e.ctrlKey || e.metaKey) e.preventDefault();
         });
+
+        // Disable right-click
+        wrapper.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Disable common download shortcuts
+        wrapper.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && ['s', 'u', 'p', 'a', 'i'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+            }
+        });
+
+        // Block screen recording
+        if (navigator.mediaDevices) {
+            navigator.mediaDevices.getDisplayMedia = () => {
+                throw new Error('Screen recording is not allowed');
+            };
+        }
+
+        // Blur video when tab is not focused
+        document.addEventListener('visibilitychange', () => {
+            const iframe = document.getElementById('protectedVideo');
+            if (document.hidden && iframe) {
+                iframe.style.filter = 'blur(20px)';
+                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            } else if (iframe) {
+                iframe.style.filter = 'none';
+            }
+        });
+    }
+
+    // Handle visibility change
+    document.addEventListener('visibilitychange', () => {
+        const iframe = document.getElementById('protectedVideo');
+        if (document.hidden && iframe) {
+            iframe.style.filter = 'blur(20px)';
+            // Optionally pause the video when tab is not active
+            iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        } else if (iframe) {
+            iframe.style.filter = 'none';
+        }
+    });
+}
+
+// Add video controls
+function addVideoControls() {
+    const videoContainer = document.getElementById('videoContainer');
+    if (videoContainer) {
+        const controls = `
+            <div class="video-controls">
+                <button id="playPauseBtn">Play/Pause</button>
+                <button id="muteBtn">Mute/Unmute</button>
+                <button id="skipBackBtn">-10s</button>
+                <button id="skipForwardBtn">+10s</button>
+                <label for="speedControl">Speed:</label>
+                <select id="speedControl">
+                    <option value="0.5">0.5x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                </select>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
+                <input type="range" id="seekBar" value="0">
+            </div>
+        `;
+        videoContainer.insertAdjacentHTML('beforeend', controls);
+
+        const iframe = document.getElementById('protectedVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const skipBackBtn = document.getElementById('skipBackBtn');
+        const skipForwardBtn = document.getElementById('skipForwardBtn');
+        const speedControl = document.getElementById('speedControl');
+        const volumeControl = document.getElementById('volumeControl');
+        const seekBar = document.getElementById('seekBar');
+
+        playPauseBtn.addEventListener('click', () => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"playPauseVideo","args":""}', '*');
+        });
+
+        muteBtn.addEventListener('click', () => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"muteUnmuteVideo","args":""}', '*');
+        });
+
+        skipBackBtn.addEventListener('click', () => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"seekBy","args":["-10"]}', '*');
+        });
+
+        skipForwardBtn.addEventListener('click', () => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"seekBy","args":["10"]}', '*');
+        });
+
+        speedControl.addEventListener('change', () => {
+            iframe.contentWindow.postMessage(`{"event":"command","func":"setPlaybackRate","args":["${speedControl.value}"]}`, '*');
+        });
+
+        volumeControl.addEventListener('input', () => {
+            iframe.contentWindow.postMessage(`{"event":"command","func":"setVolume","args":["${volumeControl.value * 100}"]}`, '*');
+        });
+
+        seekBar.addEventListener('input', () => {
+            iframe.contentWindow.postMessage(`{"event":"command","func":"seekTo","args":["${seekBar.value}"]}`, '*');
+        });
+
+        // Update seek bar as video plays
+        setInterval(() => {
+            iframe.contentWindow.postMessage('{"event":"command","func":"getCurrentTime","args":""}', '*');
+        }, 1000);
+
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.event === 'infoDelivery' && event.data.info) {
+                if (event.data.info.currentTime) {
+                    seekBar.value = event.data.info.currentTime;
+                }
+                if (event.data.info.duration) {
+                    seekBar.max = event.data.info.duration;
+                }
+            }
+        });
     }
 }
+
+// Initialize video controls when DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+    addVideoControls();
+});
 
 function updateNavigationButtons() {
     const prevBtn = document.getElementById('prevVideo');
@@ -383,14 +535,14 @@ function navigateVideo(direction) {
     }
 }
 
+// Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize standard navigation
     initializeNavigation();
     
     // Content page specific code
     setupVideoPlayer();
-    createVideoList(); // Ensure video list is created after DOM is loaded
-    playVideo(); // Play first video
+    loadVideoList();
 });
 
 function initializeNavigation() {
